@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- The existing version of lint is not working properly with KT files and multi-flavors -->
+    <!-- So we have to ignore that until it's solved -->
+    <issue id="UnusedResources" severity="ignore"/>
+
+    <!-- We skip some folder like ldpi intentionally to reduce the APK size -->
+    <issue id="IconMissingDensityFolder" severity="ignore" />
+
+    <!--  We don't support RTL yet  -->
+    <issue id="RtlHardcoded" severity="ignore" />
+    <issue id="RtlCompat" severity="ignore" />
+    <issue id="RtlEnabled" severity="ignore" />
+    <issue id="RtlSymmetry" severity="ignore" />
+
+    <!-- We keep dependency versions in a separate file that lint doesn't check and update them when needed -->
+    <issue id="GradleDependency" severity="ignore" />
+
+    <!--  Ignore long vector drawable path (not the path to the file)  -->
+    <issue id="VectorPath" severity="ignore" />
+
+    <issue id="InvalidPackage">
+        <ignore regexp=".*com.zendesk." />
+        <ignore regexp="org\.apache\.commons\.jexl2\.scripting.*" />
+        <ignore regexp="byte-buddy-agent-[\d.]*.jar" />
+        <ignore regexp="mockito-core-[\d.]*.jar" />
+    </issue>
+
+    <!--  Ignore issues that report that baseline issues were present  -->
+    <issue id="LintBaseline" severity="ignore" />
+</lint>
