@@ -1,0 +1,52 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    // Need to apply dependencies here to have an access to constants in this block
+    // Top-level declaration doesn't work for this `buildscript` closure
+    apply from: 'dependencies.gradle'
+
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath libraries.platform.gradle
+        classpath libraries.platform.kotlinGradlePlugin
+        // for detekt plugin
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.7.4"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+
+    ext {
+        // List of all flavor permutations is needed to generate fine-grained dependencies for each build version.
+        // Duplicates the app.gradle b/c we can't retrieve it from the app.gradle
+        // so the duplication is unavoidable
+        buildTypes = ["Debug", "Release"]
+    }
+}
+
+apply {
+    plugin 'io.gitlab.arturbosch.detekt'
+
+    from 'check-style.gradle'
+    from 'lint.gradle'
+    from 'detekt.gradle'
+    from 'ci.gradle'
+    from 'custom_tasks.gradle'
+    from "gradle/githooks_config.gradle.kts"
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        flatDir { dirs "$rootProject.rootDir/libs" }
+        jcenter()
+    }
+    tasks.withType(Test) {
+        maxParallelForks = Math.max(1, Runtime.runtime.availableProcessors().intdiv(2)) // half of CPUs but no fewer than 1
+    }
+}

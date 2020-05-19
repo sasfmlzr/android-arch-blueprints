@@ -1,0 +1,111 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply from: 'config.gradle'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+}
+
+android {
+    compileSdkVersion versions.platform.compileSdk
+    dexOptions {
+        maxProcessCount 4
+    }
+    defaultConfig {
+        //noinspection MinSdkTooLow
+        minSdkVersion versions.platform.minSdk
+        targetSdkVersion versions.platform.targetSdk
+        versionCode generateVersionCode()
+        versionName generateVersionName()
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        // default configured applicationId and testApplicationId are necessary only to run UI instrumented tests.
+        applicationId "com.distillery.android.arch"
+        testApplicationId "com.distillery.android.arch.test"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+                arg("room.incremental", "true")
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+        debug {
+            // Disable PNGs crunching for debug builds
+            crunchPngs false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.platform.java
+        targetCompatibility versions.platform.java
+    }
+    kotlinOptions {
+        jvmTarget = versions.platform.java
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+        animationsDisabled = true
+    }
+    dataBinding {
+        enabled = true
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //libraries
+    implementation libraries.android.activity
+    implementation libraries.android.fragment
+    implementation libraries.android.supportRecyclerView
+    implementation libraries.android.supportAppCompat
+    implementation libraries.android.supportCardView
+    implementation libraries.android.supportConstraintLayout
+    implementation libraries.android.supportDesign
+    implementation libraries.android.supportMultidex
+
+    implementation libraries.platform.kotlinStdLib
+
+    // unit test frameworks
+    testImplementation libraries.test.androidXCore
+    testImplementation libraries.test.androidXExt
+    testImplementation libraries.test.junit
+    testImplementation libraries.test.mockitoCore
+    testImplementation libraries.test.mockitoKotlin
+    testImplementation libraries.test.robolectricCore
+    testImplementation libraries.test.robolectricShadowsMultidex
+    testImplementation libraries.test.espressoCore
+    testImplementation libraries.test.runner
+
+    // white-box UI test frameworks
+    androidTestImplementation libraries.test.mockitoCore
+    androidTestImplementation libraries.test.mockitoAndroid
+    androidTestImplementation libraries.test.mockitoKotlin
+    androidTestImplementation libraries.test.runner
+    androidTestImplementation libraries.test.androidXCore
+    androidTestImplementation libraries.test.androidXExt
+    androidTestImplementation libraries.test.junit
+    androidTestImplementation libraries.test.espressoCore
+
+    //Android Architecture Components
+    api libraries.android.archRoom
+    kapt libraries.android.archRoomCompiler
+}
+ext {
+    DeviceProviderInstrumentTestTask = com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
+}

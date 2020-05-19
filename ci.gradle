@@ -1,0 +1,27 @@
+//Contains aliases for tasks that need to be executed on CI server.
+//CI should only use tasks from this list so that we can modify the actual tasks in code without changing CI server
+//configuration every time.
+//Note: the actual tasks must be added by full names `:project:taskName` b/c global level tasks are not available here.
+
+task ciTest() {
+    group 'CI'
+    description 'Perform all unit-tests required to validate the build'
+    dependsOn = [
+            // automation-assist-interface is not added to the list in purpose due to its internal needs nature
+            // testutilities is not added to the list in purpose cause it is created to assist testing in other modules
+        ":app:assembleDebug",
+
+        ":app:assembleDebugAndroidTest",
+    ]
+}
+
+task ciStaticCheck() {
+    group 'CI'
+    description 'Perform all static checks on project'
+    dependsOn = [
+        ':app:lintRelease',
+
+        "checkstyle",
+        "detekt",
+    ]
+}

@@ -1,0 +1,19 @@
+/*
+ * Task to run single test class or method for all countries environments.
+ *
+ * Should be used from terminal: ./gradlew runSingleTestForAllFlavors -P testClass=co.tala.auth.signup.SignUpPresenterTest
+ * or  ./gradlew runSingleTestForAllFlavors -P testClass="co.tala.auth.signup.SignUpPresenterTest.test onStart calls view displayEnterPhoneState"
+ * average time of execution 30sec-3min depending on build state
+ */
+task runSingleTestForAllFlavors(type: Exec) {
+    doFirst {
+        executable "sh"
+        args "-c", buildBashCommand(testClass)
+    }
+}
+
+private String buildBashCommand(String testClass) {
+    return countries.collect { country ->
+        " ./gradlew :app:test${country}QaDebugUnitTest --tests '$testClass'"
+    }.join(" && ")
+}
