@@ -19,10 +19,9 @@
 
 TAG="[Pre-push hook] "
 
-    echo ""
-    echo "${TAG}Code-style check"
-    (./gradlew checkstyle && ./gradlew detekt) || exit 1
-fi
+echo ""
+echo "${TAG}Code-style check"
+(./gradlew checkstyle && ./gradlew detekt) || exit 1
 
 echo ""
 echo "${TAG}Finished"
