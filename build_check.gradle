@@ -1,0 +1,24 @@
+// Contains aliases for tasks that can be executed on CI server or manually.
+// CI should only use tasks from this list so that we can modify the actual tasks in code
+// without changing CI server configuration every time.
+// Note: the actual tasks must be added by full names `:project:taskName`
+// b/c global level tasks are not available here.
+
+task allTests() {
+    group 'fullBuildCheck'
+    description 'Perform all unit-tests required to validate the build'
+    dependsOn = [
+            ":app:testDebugUnitTest",
+    ]
+}
+
+task staticCheck() {
+    group 'fullBuildCheck'
+    description 'Perform all static checks on project'
+    dependsOn = [
+            ':app:lintRelease',
+
+            "checkstyle",
+            "detekt",
+    ]
+}

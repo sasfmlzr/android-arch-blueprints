@@ -3,6 +3,7 @@ buildscript {
     apply from: 'dependencies.gradle'
 
     repositories {
+        mavenCentral()
         google()
         jcenter()
         
@@ -11,6 +12,8 @@ buildscript {
         classpath libraries.platform.gradle
         classpath libraries.platform.kotlinGradlePlugin
 
+        // for detekt plugin
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.7.4"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,6 +26,21 @@ buildscript {
         buildTypes = ["Debug", "Release"]
     }
 }
+
+apply {
+    plugin 'io.gitlab.arturbosch.detekt'
+    // style check for Java code
+    from 'check-style.gradle'
+    // style check for Kotlin code
+    from 'detekt.gradle'
+    // style check for XML
+    from 'lint.gradle'
+    // all-in-one check runner
+    from 'build_check.gradle'    
+    // configures pre-push hook for Git
+    from "gradle/githooks_config.gradle.kts"
+}
+
 
 allprojects {
     repositories {
