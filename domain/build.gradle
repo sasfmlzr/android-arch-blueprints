@@ -17,6 +17,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Platform libraries
     implementation libraries.platform.kotlinStdLib
+    implementation libraries.platform.kotlinCoroutines
 
     // Android libraries
     implementation libraries.android.core
