@@ -49,6 +49,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':domain')
+    implementation project(path: ':mvi')
+    implementation project(path: ':mvi_example')
+    implementation project(path: ':mvp')
+    implementation project(path: ':mvp_example')
+    implementation project(path: ':mvvm')
+    implementation project(path: ':mvvm_example')
+
     // Platform libraries
     implementation libraries.platform.kotlinStdLib
 
