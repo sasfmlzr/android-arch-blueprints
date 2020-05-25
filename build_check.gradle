@@ -9,6 +9,13 @@ task allTests() {
     description 'Perform all unit-tests required to validate the build'
     dependsOn = [
             ":app:testDebugUnitTest",
+            ":mvi:testDebugUnitTest",
+            ":mvi_example:testDebugUnitTest",
+            ":mvp:testDebugUnitTest",
+            ":mvp_example:testDebugUnitTest",
+            ":mvvm:testDebugUnitTest",
+            ":mvvm_example:testDebugUnitTest",
+            ":domain:testDebugUnitTest"
     ]
 }
 
@@ -17,6 +24,13 @@ task staticCheck() {
     description 'Perform all static checks on project'
     dependsOn = [
             ':app:lintRelease',
+            ':mvi:lintRelease',
+            ':mvi_example:lintRelease',
+            ':mvp:lintRelease',
+            ':mvp_example:lintRelease',
+            ':mvvm:lintRelease',
+            ':mvvm_example:lintRelease',
+            ':domain:lintRelease',
 
             "checkstyle",
             "detekt",
