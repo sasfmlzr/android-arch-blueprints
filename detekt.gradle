@@ -1,0 +1,20 @@
+detekt {
+    // Detekt allows multiple profiles to be used for different projects which are declared like
+    //     profile("main") {
+    //     defaultProfile {
+    // see https://github.com/arturbosch/detekt for more details
+
+    toolVersion = "1.7.4"
+    input = files(
+            "$projectDir"
+    )
+    config = files(rootProject.file("./config/detekt/default-detekt-config.yml"))
+    parallel = false
+    reports {
+        xml {
+            enabled = true
+            destination = file("${project.buildDir}/reports/detekt/detekt.xml")
+        }
+        txt.enabled = false
+    }
+}

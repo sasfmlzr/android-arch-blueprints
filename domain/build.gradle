@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.platform.compileSdk
+
+    defaultConfig {
+        minSdkVersion versions.platform.minSdk
+        targetSdkVersion versions.platform.targetSdk
+        vectorDrawables.useSupportLibrary = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Platform libraries
+    implementation libraries.platform.kotlinStdLib
+    implementation libraries.platform.kotlinCoroutines
+
+    // Android libraries
+    implementation libraries.android.core
+    implementation libraries.android.supportAppCompat
+    implementation libraries.android.supportConstraintLayout
+
+    // Unit tests
+    testImplementation libraries.test.junit
+}
