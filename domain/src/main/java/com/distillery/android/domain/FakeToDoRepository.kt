@@ -1,5 +1,6 @@
 package com.distillery.android.domain
 
+import androidx.annotation.VisibleForTesting
 import com.distillery.android.domain.models.ToDoModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
@@ -9,27 +10,37 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.net.ConnectException
 import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-private val uniqueIdGenerator = AtomicLong(0)
+/**
+ * Static generator to guarantee uniqueness of ids across the app.
+ */
+private val idGenerator = AtomicLong(0)
 
-private const val DEFAULT_DELAY_GENERATOR = 5000L
-private const val DEFAULT_DELAY_ADDITION = 1500L
-private const val TIME_TO_DIE = 10L
+@VisibleForTesting
+const val DELAY_OF_VALUES_GENERATOR = 5000L
+
+@VisibleForTesting
+const val DELAY_FOR_VALUE_ADDITION = 1500L
+
+private const val TODOS_ITEMS_TO_THROW = 10
 
 class FakeToDoRepository : ToDoRepository {
 
     private val toDos = ConcurrentHashMap<Long, ToDoModel>()
     private val todosChannel = Channel<List<ToDoModel>>()
 
+    // generate infinite amount of elements, but throw exception after 10th element
     init {
         GlobalScope.launch {
             generateValues().collect { model ->
-                toDos[model.uniqueId] = model
-                println("${ToDoRepository::class.simpleName} Publishing value ${model.uniqueId}")
-                todosChannel.send(toDos.values.toList())
+                saveModel(model)
+                publishChanges()
+
+                closeChannelIfLimitReached()
             }
         }
     }
@@ -39,53 +50,76 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     override suspend fun addToDo(title: String, description: String) {
-        println("${ToDoRepository::class.simpleName} Started value addition")
-        delay(DEFAULT_DELAY_ADDITION)
-        val id = uniqueIdGenerator.getAndIncrement()
-        val model = ToDoModel(id, "$title ID: $id", description)
-        toDos[model.uniqueId] = model
-        println("${ToDoRepository::class.simpleName} Value ${model.uniqueId} added")
-        if (uniqueIdGenerator.get() == TIME_TO_DIE) {
-            // moment of surprise
-            println("${ToDoRepository::class.simpleName} Oops")
-            throw IllegalArgumentException("You died")
-        } else {
-            println("${ToDoRepository::class.simpleName} Publishing value ${model.uniqueId}")
-            todosChannel.send(toDos.values.toList())
-        }
+        delay(DELAY_FOR_VALUE_ADDITION)
+        createAndSaveModel(title, description)
+        throwIfToDoListLimitReached()
+        publishChanges()
     }
 
     override fun completeToDo(uniqueId: Long) {
-        if (uniqueId > 2 && uniqueId % 2 == 0L) {
-            // moment of surprise
-            throw IllegalArgumentException("You died")
-        }
+        throwIfIdIsEven(uniqueId)
+        // if such model exists update it's completion date
         val model = toDos[uniqueId]?.copy(completedAt = Date())
+        // or do nothing at all
             ?: return
-        toDos[model.uniqueId] = model
+        saveModel(model)
+        publishChanges()
+    }
+
+    // generates infinite flow of values
+    private fun generateValues() = flow {
+        while (true) {
+            delay(DELAY_OF_VALUES_GENERATOR)
+            val model = createToDo(idGenerator.getAndIncrement())
+            emit(model)
+        }
+    }
+
+    private fun publishChanges() {
         GlobalScope.launch {
             todosChannel.send(toDos.values.toList())
         }
     }
 
-    private fun generateValues() = flow {
-        println("${ToDoRepository::class.simpleName} Started new value generation")
-        delay(DEFAULT_DELAY_GENERATOR)
-        val model = createToDo(uniqueIdGenerator.getAndIncrement())
-        println("${ToDoRepository::class.simpleName} Value generated")
-        if (uniqueIdGenerator.get() == TIME_TO_DIE) {
-            println("${ToDoRepository::class.simpleName} Oops")
-            // moment of surprise
-            todosChannel.close(IllegalArgumentException("You died"))
-        } else {
-            println("${ToDoRepository::class.simpleName} Emitting value ${model.uniqueId}")
-            emit(model)
-        }
+    private fun createToDo(
+        id: Long,
+        title: String = "ToDo №$id",
+        description: String = "Awesome stuff to do!"
+    ) = ToDoModel(
+        uniqueId = id,
+        title = title,
+        description = description
+    )
+
+    private fun saveModel(model: ToDoModel) {
+        toDos[model.uniqueId] = model
     }
 
-    private fun createToDo(id: Long) = ToDoModel(
-        uniqueId = id,
-        title = "ToDo №$id",
-        description = "Awesome stuff to do!"
-    )
+    private fun createAndSaveModel(title: String, description: String) {
+        saveModel(createToDo(idGenerator.getAndIncrement(), title, description))
+    }
+
+    /**
+     * Throws error if [uniqueId] is even but only when [uniqueId] > 2.
+     */
+    private fun throwIfIdIsEven(uniqueId: Long) {
+        if (uniqueId <= 2 || uniqueId % 2 != 0L) {
+           return
+        }
+        throw UnsupportedOperationException("You died")
+    }
+
+    private fun throwIfToDoListLimitReached() {
+        if (toDos.size < TODOS_ITEMS_TO_THROW) {
+            return
+        }
+        throw ConnectException("You died")
+    }
+
+    private fun closeChannelIfLimitReached() {
+        if (toDos.size < TODOS_ITEMS_TO_THROW) {
+            return
+        }
+        todosChannel.close(IllegalArgumentException("You died"))
+    }
 }

@@ -10,7 +10,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class ToDoRepositoryTest {
+/**
+ * Fraction of time in ms to allow suspend method to kick in.
+ * Should be veeery small.
+ */
+private const val FRACTION_OF_TIME = 50L
+
+private const val EXPECTED_AMOUNT_OF_ELEMENTS = 2
+
+class FakeToDoRepositoryTest {
 
     private lateinit var repository: ToDoRepository
 
@@ -30,10 +38,12 @@ class ToDoRepositoryTest {
         }
         // and initially list size is zero
         check(listSize == 0)
-        // when 5 seconds past
-        delay(5200)
-        // then list has 1 element
-        assertEquals(1, listSize)
+
+        // when enough time has past
+        delay(DELAY_OF_VALUES_GENERATOR * EXPECTED_AMOUNT_OF_ELEMENTS + FRACTION_OF_TIME)
+
+        // then list has 2 element
+        assertEquals(EXPECTED_AMOUNT_OF_ELEMENTS, listSize)
 
         subscription.cancel()
     }
@@ -54,8 +64,8 @@ class ToDoRepositoryTest {
         launch {
             repository.addToDo("stub", "stub")
         }
-        // and 1.7 seconds past
-        delay(1700)
+        // and delay is past
+        delay(DELAY_FOR_VALUE_ADDITION + FRACTION_OF_TIME)
 
         // then list has 1 element
         assertEquals(1, listSize)
@@ -73,7 +83,7 @@ class ToDoRepositoryTest {
                 listOfTodos = it
             }
         }
-        delay(1700)
+        delay(DELAY_FOR_VALUE_ADDITION + FRACTION_OF_TIME)
         check(listOfTodos.size == 1)
         // and no elements are completed
         assertTrue(listOfTodos.all { it.completedAt == null })
@@ -82,7 +92,7 @@ class ToDoRepositoryTest {
         repository.completeToDo(listOfTodos.first().uniqueId)
 
         // then list has 1 element and all elements are completed
-        delay(1) // minimal delay required in order to allow suspend methods to kick in
+        delay(FRACTION_OF_TIME) // minimal delay required in order to allow suspend methods to kick in
         assertEquals(1, listOfTodos.size)
         assertTrue(listOfTodos.all { it.completedAt != null })
 
