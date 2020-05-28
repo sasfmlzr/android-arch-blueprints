@@ -11,6 +11,9 @@ project.ext {
             ],
             android : [
                     lifecycleVersion: "2.2.0",
+            ],
+            koin    : [
+                    koinVersion: "2.1.5"
             ]
     ]
     libraries = [
@@ -18,7 +21,7 @@ project.ext {
                     kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.platform.kotlin",
                     kotlinStdLib      : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.platform.kotlin",
                     kotlinCoroutines  : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.platform.coroutines",
-                    gradle            : "com.android.tools.build:gradle:3.5.3",
+                    gradle            : "com.android.tools.build:gradle:3.6.3",
             ],
             android : [
                     core                     : "androidx.core:core-ktx:1.2.0",
@@ -30,6 +33,14 @@ project.ext {
             ],
             test    : [
                     junit: "junit:junit:4.13"
+            ],
+            koin    : [
+                    core      : "org.koin:koin-core:$versions.koin.koinVersion",
+                    coreExt   : "org.koin:koin-core-ext:$versions.koin.koinVersion",
+                    test      : "org.koin:koin-test:$versions.koin.koinVersion",
+                    scope     : "org.koin:koin-androidx-scope:$versions.koin.koinVersion",
+                    viewModel : "org.koin:koin-androidx-viewmodel:$versions.koin.koinVersion",
+                    androidExt: "org.koin:koin-androidx-ext:$versions.koin.koinVersion"
             ]
     ]
 }
