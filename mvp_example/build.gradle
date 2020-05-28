@@ -1,15 +1,49 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply from: 'config.gradle'
 
 android {
     compileSdkVersion versions.platform.compileSdk
 
     defaultConfig {
+        // default configured applicationId and testApplicationId are necessary only to run UI instrumented tests.
+        applicationId "com.distillery.android.blueprints.mvp"
+        testApplicationId "com.distillery.android.blueprints.mvp.test"
+
         minSdkVersion versions.platform.minSdk
         targetSdkVersion versions.platform.targetSdk
-        vectorDrawables.useSupportLibrary = true
+
+        versionCode generateVersionCode()
+        versionName generateVersionName()
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    viewBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // Disable PNGs crunching for debug builds
+            crunchPngs false
+        }
+    }
+    compileOptions {
+        sourceCompatibility versions.platform.java
+        targetCompatibility versions.platform.java
+    }
+    kotlinOptions {
+        jvmTarget = versions.platform.java
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+        animationsDisabled = true
     }
 }
 
@@ -26,6 +60,15 @@ dependencies {
     implementation libraries.android.core
     implementation libraries.android.supportAppCompat
     implementation libraries.android.supportConstraintLayout
+    implementation libraries.android.supportRecyclerView
+
+    // Koin
+    implementation libraries.koin.core
+    implementation libraries.koin.coreExt
+    implementation libraries.koin.scope
+    implementation libraries.koin.viewModel
+    implementation libraries.koin.androidExt
+    testImplementation libraries.koin.test
 
     // Unit tests
     testImplementation libraries.test.junit
