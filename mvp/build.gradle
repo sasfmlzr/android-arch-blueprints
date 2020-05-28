@@ -11,6 +11,9 @@ android {
         targetSdkVersion versions.platform.targetSdk
         vectorDrawables.useSupportLibrary = true
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -28,4 +31,8 @@ dependencies {
 
     // Unit tests
     testImplementation libraries.test.junit
+
+    // Koin
+    implementation libraries.koin.core
+    testImplementation libraries.koin.test
 }
