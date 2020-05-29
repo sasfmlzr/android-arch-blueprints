@@ -5,9 +5,10 @@ import androidx.viewbinding.ViewBinding
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-abstract class BaseFragment<B : ViewBinding> : Fragment(), KoinComponent, Presentable {
+abstract class BaseFragment<B : ViewBinding, V : BaseContractView> : Fragment(), KoinComponent, Presentable {
 
     private val basePresenterProvider: BasePresenterProvider by inject()
     abstract val presenter: BasePresenter
     protected lateinit var binding: B
+    abstract val presenterView: V
 }

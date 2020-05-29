@@ -2,7 +2,6 @@ package com.distillery.android.blueprints.mvp
 
 import android.app.Application
 import com.distillery.android.blueprints.mvp.architecture.BasePresenterProvider
-import com.distillery.android.blueprints.mvp.presenter.PresenterProvider
 import com.distillery.android.domain.FakeToDoRepository
 import com.distillery.android.domain.ToDoRepository
 import org.koin.android.ext.koin.androidContext

@@ -2,4 +2,4 @@ package com.distillery.android.blueprints.mvp.architecture
 
 import org.koin.core.KoinComponent
 
-abstract class BasePresenter : KoinComponent, Presentable
+abstract class BasePresenter(private val contractView: BaseContractView?) : KoinComponent, Presentable
