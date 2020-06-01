@@ -7,10 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.databinding.ItemTodoBinding
 
-class TODOListAdapter(private val todoList: List<ToDoModel>) :
-        ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(TODOListDiffCallback()) {
+class TODOListAdapter : ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(TODOListDiffCallback()) {
 
-    class TODOViewHolder(val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root)
+    class TODOViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(toDoModel: ToDoModel) {
+            binding.titleTextView.text = toDoModel.title
+            binding.descriptionTextView.text = toDoModel.description
+            binding.createdAtTextView.text = toDoModel.createdAt.toString()
+            binding.completedAtTextView.text = toDoModel.completedAt.toString()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TODOViewHolder {
         return TODOViewHolder(
@@ -23,13 +29,6 @@ class TODOListAdapter(private val todoList: List<ToDoModel>) :
     }
 
     override fun onBindViewHolder(holder: TODOViewHolder, position: Int) {
-        getItem(position).let { todo ->
-            holder.binding.titleTextView.text = todo.title
-            holder.binding.descriptionTextView.text = todo.description
-            holder.binding.createdAtTextView.text = todo.createdAt.toString()
-            holder.binding.completedAtTextView.text = todo.completedAt.toString()
-        }
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = todoList.size
 }

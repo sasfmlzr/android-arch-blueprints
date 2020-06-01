@@ -1,9 +1,12 @@
 package com.distillery.android.blueprints.mvp.feature.todo
 
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.distillery.android.blueprints.mvp.architecture.BaseContractView
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.mvp_example.R
 import com.distillery.android.mvp_example.databinding.FragmentTodoBinding
 
 abstract class TODOContractView(private val binding: FragmentTodoBinding) : BaseContractView {
@@ -29,4 +32,18 @@ abstract class TODOContractView(private val binding: FragmentTodoBinding) : Base
     }
 
     abstract fun showToDoList(list: List<ToDoModel>)
+
+    fun addToDo(toDoAction: (String, String) -> Unit) {
+        AlertDialog.Builder(binding.root.context)
+                .setTitle(binding.root.context.getString(R.string.todo_dialog_title))
+                .setMessage(binding.root.context.getString(R.string.todo_dialog_message))
+                .setView(R.layout.dialog_add_todo)
+                .setPositiveButton("Ok") { dialog, _ ->
+                    val title = (dialog as AlertDialog).findViewById<EditText>(R.id.title)?.text.toString()
+                    val description = dialog.findViewById<EditText>(R.id.description)?.text.toString()
+                    toDoAction(title, description)
+                }
+                .setNegativeButton(binding.root.context.getString(R.string.cancel)) { _, _ -> }
+                .show()
+    }
 }

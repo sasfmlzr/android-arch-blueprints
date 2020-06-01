@@ -2,18 +2,28 @@ package com.distillery.android.blueprints.mvp.feature.todo
 
 import com.distillery.android.blueprints.mvp.architecture.BasePresenter
 import com.distillery.android.domain.ToDoRepository
-import com.distillery.android.domain.models.ToDoModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.inject
-import java.util.Date
+import kotlin.coroutines.CoroutineContext
 
-class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view) {
+class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view), CoroutineScope {
 
     private val todoRepo: ToDoRepository by inject()
+    private val job = Job()
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        launch(Dispatchers.Main) {
+            view?.showError(throwable.message!!)
+        }
+    }
+
+    override val coroutineContext: CoroutineContext = job + Dispatchers.IO + coroutineExceptionHandler
 
     init {
         if (view == null) {
@@ -21,28 +31,36 @@ class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view) {
         }
     }
 
-    companion object {
-        private const val DELAY_FOR_MOCK_DATA = 5000L
-        private const val SIZE_LIST = 10
+    private fun finishLoading() {
+        view?.endLoading()
     }
 
-    fun getToDoList() {
-        val list = generateSequence(ToDoModel(0, "Title", "Description", Date(), Date())) {
-            it.copy(it.uniqueId + 1)
-        }.take(SIZE_LIST).toList()
-
-        view?.startLoading()
-
-        GlobalScope.launch(Dispatchers.IO) {
-            delay(DELAY_FOR_MOCK_DATA)
-            withContext(Dispatchers.Main) {
-                view?.showToDoList(list)
-                finishLoading()
-            }
+    fun fetchToDo() {
+        launch {
+            view?.startLoading()
+            todoRepo.fetchToDos().catch {
+                        withContext(Dispatchers.Main) {
+                            view?.showError(it.toString())
+                        }
+                    }
+                    .collect {
+                        withContext(Dispatchers.Main) {
+                            view?.showToDoList(it)
+                            finishLoading()
+                        }
+                    }
         }
     }
 
-    private fun finishLoading() {
-        view?.endLoading()
+    fun cleanup() {
+        job.cancel()
+    }
+
+    fun addTodo() {
+        view?.addToDo { title, description ->
+            launch {
+                todoRepo.addToDo(title, description)
+            }
+        }
     }
 }
