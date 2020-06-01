@@ -2,7 +2,7 @@ package com.distillery.android.domain
 
 import androidx.annotation.VisibleForTesting
 import com.distillery.android.domain.models.ToDoModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -28,14 +28,14 @@ const val DELAY_FOR_VALUE_ADDITION = 1500L
 
 private const val TODOS_ITEMS_TO_THROW = 10
 
-class FakeToDoRepository : ToDoRepository {
+class FakeToDoRepository(private val scope: CoroutineScope) : ToDoRepository {
 
     private val toDos = ConcurrentHashMap<Long, ToDoModel>()
     private val todosChannel = Channel<List<ToDoModel>>()
 
     // generate infinite amount of elements, but throw exception after 10th element
     init {
-        GlobalScope.launch {
+        scope.launch {
             generateValues().collect { model ->
                 saveModel(model)
                 publishChanges()
@@ -76,7 +76,7 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     private fun publishChanges() {
-        GlobalScope.launch {
+        scope.launch {
             todosChannel.send(toDos.values.toList())
         }
     }
@@ -104,7 +104,7 @@ class FakeToDoRepository : ToDoRepository {
      */
     private fun throwIfIdIsEven(uniqueId: Long) {
         if (uniqueId <= 2 || uniqueId % 2 != 0L) {
-           return
+            return
         }
         throw UnsupportedOperationException("You died")
     }

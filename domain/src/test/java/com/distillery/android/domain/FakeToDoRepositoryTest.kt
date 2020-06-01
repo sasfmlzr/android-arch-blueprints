@@ -1,6 +1,7 @@
 package com.distillery.android.domain
 
 import com.distillery.android.domain.models.ToDoModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ import org.junit.Test
  * Fraction of time in ms to allow suspend method to kick in.
  * Should be veeery small.
  */
-private const val FRACTION_OF_TIME = 50L
+private const val FRACTION_OF_TIME = 100L
 
 private const val EXPECTED_AMOUNT_OF_ELEMENTS = 2
 
@@ -24,7 +25,8 @@ class FakeToDoRepositoryTest {
 
     @Before
     fun setup() {
-        repository = FakeToDoRepository()
+        val scope = GlobalScope
+        repository = FakeToDoRepository(scope)
     }
 
     @Test

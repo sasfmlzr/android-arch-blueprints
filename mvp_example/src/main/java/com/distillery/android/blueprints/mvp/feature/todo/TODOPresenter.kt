@@ -11,19 +11,21 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import kotlin.coroutines.CoroutineContext
 
 class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view), CoroutineScope {
 
-    private val todoRepo: ToDoRepository by inject()
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         launch(Dispatchers.Main) {
             view?.showError(throwable.message!!)
         }
     }
-
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO + coroutineExceptionHandler
+
+    private val todoRepo: ToDoRepository by inject(qualifier = named("RepositoryScope")) { parametersOf(this) }
 
     init {
         if (view == null) {
