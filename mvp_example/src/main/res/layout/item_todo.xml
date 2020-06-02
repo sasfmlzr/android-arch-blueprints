@@ -3,65 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp">
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/completedCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/titleTextView"
+        app:layout_constraintEnd_toStartOf="@id/titleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:maxLength="20"
+        android:gravity="start|center"
         app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
-        app:layout_constraintEnd_toStartOf="@id/createdAtTextView"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteButton"
+        app:layout_constraintStart_toEndOf="@id/completedCheckBox"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        android:backgroundTint="@color/iconColor"
+        android:contentDescription="@string/delete"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/titleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/titleTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/descriptionTextView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:ellipsize="end"
-        android:ems="3"
+        android:layout_height="wrap_content"
         android:lines="1"
-        android:maxLength="4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/completedAtTextView"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/titleTextView"
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         app:layout_constraintVertical_bias="1"
         tools:text="Description" />
 
-    <TextView
-        android:id="@+id/createdAtTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/titleTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/titleTextView"
-        app:layout_constraintTop_toTopOf="@id/titleTextView"
-
-        tools:text="Created date" />
-
-    <TextView
-        android:id="@+id/completedAtTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/descriptionTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/titleTextView"
-        app:layout_constraintTop_toTopOf="@id/descriptionTextView"
-        tools:text="Completed date" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descriptionTextView"
-        tools:text="Completed date" />
 </androidx.constraintlayout.widget.ConstraintLayout>

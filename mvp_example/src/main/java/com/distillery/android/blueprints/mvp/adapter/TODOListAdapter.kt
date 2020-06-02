@@ -7,14 +7,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.databinding.ItemTodoBinding
 
-class TODOListAdapter : ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(TODOListDiffCallback()) {
+class TODOListAdapter(
+    private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
+    private val onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
+) :
+        ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(TODOListDiffCallback()) {
 
     class TODOViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(toDoModel: ToDoModel) {
+        fun bind(
+            toDoModel: ToDoModel,
+            onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
+            onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
+        ) {
             binding.titleTextView.text = toDoModel.title
             binding.descriptionTextView.text = toDoModel.description
-            binding.createdAtTextView.text = toDoModel.createdAt.toString()
-            binding.completedAtTextView.text = toDoModel.completedAt.toString()
+            binding.deleteButton.setOnClickListener {
+                onDeleteClickListener(toDoModel)
+            }
+            binding.completedCheckBox.isChecked = toDoModel.completedAt != null
+            binding.completedCheckBox.setOnClickListener {
+                if (!binding.completedCheckBox.isChecked) {
+                    binding.completedCheckBox.isChecked = true
+                } else {
+                    binding.completedCheckBox.isChecked = false
+                    onCompleteClickListener(toDoModel)
+                }
+            }
         }
     }
 
@@ -29,6 +47,6 @@ class TODOListAdapter : ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(T
     }
 
     override fun onBindViewHolder(holder: TODOViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onDeleteClickListener, onCompleteClickListener)
     }
 }

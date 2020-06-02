@@ -2,6 +2,7 @@ package com.distillery.android.blueprints.mvp.feature.todo
 
 import com.distillery.android.blueprints.mvp.architecture.BasePresenter
 import com.distillery.android.domain.ToDoRepository
+import com.distillery.android.domain.models.ToDoModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), C
 
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        launch(Dispatchers.Main) {
+        launch(Dispatchers.Main + Job()) {
             view.showError(throwable.message!!)
         }
     }
@@ -56,6 +57,14 @@ class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), C
             launch {
                 todoRepo.addToDo(title, description)
             }
+        }
+    }
+
+    fun completeToDo(todoModel: ToDoModel) {
+        try {
+            todoRepo.completeToDo(todoModel.uniqueId)
+        } catch (e: UnsupportedOperationException) {
+            view.showError(e.message!!)
         }
     }
 

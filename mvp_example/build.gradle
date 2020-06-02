@@ -63,6 +63,7 @@ dependencies {
     implementation libraries.android.supportAppCompat
     implementation libraries.android.supportConstraintLayout
     implementation libraries.android.supportRecyclerView
+    implementation libraries.android.material
 
     // Koin
     implementation libraries.koin.core

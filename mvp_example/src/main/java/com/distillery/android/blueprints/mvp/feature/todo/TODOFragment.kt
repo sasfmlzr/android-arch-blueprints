@@ -50,7 +50,13 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
 
     private fun updateAdapter() {
         if (binding.todoList.adapter == null) {
-            adapter = TODOListAdapter()
+            adapter = TODOListAdapter({ todo ->
+                todoModel = TODOModel(todoModel.toDoList.filter { it != todo })
+                adapter.submitList(todoModel.toDoList)
+            }, { todo ->
+                presenter.completeToDo(todo)
+                false
+            })
             binding.todoList.adapter = adapter
         }
         adapter.submitList(todoModel.toDoList)

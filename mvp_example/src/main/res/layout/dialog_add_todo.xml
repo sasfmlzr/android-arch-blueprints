@@ -14,7 +14,7 @@
         android:layout_marginBottom="4dp"
         android:autofillHints=""
         android:hint="@string/title"
-        android:inputType="textEmailAddress" />
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/description"
@@ -26,5 +26,5 @@
         android:layout_marginBottom="16dp"
         android:autofillHints=""
         android:hint="@string/description"
-        android:inputType="textPassword" />
+        android:inputType="text" />
 </LinearLayout>

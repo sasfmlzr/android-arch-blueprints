@@ -2,15 +2,12 @@ package com.distillery.android.blueprints.mvp.feature.todo
 
 import com.distillery.android.domain.FakeToDoRepository
 import com.distillery.android.domain.ToDoRepository
-import com.distillery.android.domain.models.ToDoModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
@@ -22,9 +19,7 @@ import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.isA
 import org.mockito.InjectMocks
-import org.mockito.Matchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -41,7 +36,10 @@ class TODOPresenterTest : KoinTest {
     @Mock
     private lateinit var todoRepo: ToDoRepository
 
-    private val scope = TestCoroutineScope()
+    companion object {
+        private const val DELAY_TIME_FOR_COROUTINES = 6000L
+    }
+
     private val testException = TestException()
 
     @Before
@@ -68,7 +66,7 @@ class TODOPresenterTest : KoinTest {
 
         runBlocking {
             presenter.fetchToDo()
-            delay(10000)
+            delay(DELAY_TIME_FOR_COROUTINES)
         }
 
         Assert.assertTrue(countItems != 0)
@@ -79,7 +77,7 @@ class TODOPresenterTest : KoinTest {
         given(view.showToDoList(ArgumentMatchers.anyList())).willThrow(testException)
         runBlocking {
             presenter.fetchToDo()
-            delay(15000)
+            delay(DELAY_TIME_FOR_COROUTINES)
         }
     }
 
