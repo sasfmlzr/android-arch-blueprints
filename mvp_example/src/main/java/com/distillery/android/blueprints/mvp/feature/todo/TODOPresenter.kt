@@ -12,29 +12,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import kotlin.coroutines.CoroutineContext
 
-class TODOPresenter(private var view: TODOContractView?) : BasePresenter(view), CoroutineScope {
+class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), CoroutineScope {
 
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         launch(Dispatchers.Main) {
-            view?.showError(throwable.message!!)
+            view.showError(throwable.message!!)
         }
     }
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO + coroutineExceptionHandler
 
-    private val todoRepo: ToDoRepository by inject(qualifier = named("RepositoryScope")) { parametersOf(this) }
-
-    init {
-        if (view == null) {
-            throw NullPointerException("View should be implemented")
-        }
-    }
+    private val todoRepo: ToDoRepository by inject { parametersOf(this) }
 
     private fun finishLoading() {
-        view?.endLoading()
+        view.endLoading()
     }
 
     fun changeView(view: TODOContractView) {
@@ -43,30 +36,33 @@ class TODOPresenter(private var view: TODOContractView?) : BasePresenter(view), 
 
     fun fetchToDo() {
         launch {
-            view?.startLoading()
+            view.startLoading()
             todoRepo.fetchToDos().catch {
                         withContext(Dispatchers.Main) {
-                            view?.showError(it.toString())
+                            view.showError(it.toString())
                         }
                     }
                     .collect {
                         withContext(Dispatchers.Main) {
-                            view?.showToDoList(it)
+                            view.showToDoList(it)
                             finishLoading()
                         }
                     }
         }
     }
 
-    fun cleanup() {
-        job.cancel()
-    }
-
     fun addTodo() {
-        view?.addToDo { title, description ->
+        view.addToDo { title, description ->
             launch {
                 todoRepo.addToDo(title, description)
             }
         }
+    }
+
+    /**
+     * Use it for cancellation ToDoRepository tasks when you route to another fragment.
+     */
+    fun cleanup() {
+        job.cancel()
     }
 }

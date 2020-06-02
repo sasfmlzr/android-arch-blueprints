@@ -14,15 +14,22 @@ project.ext {
             ],
             koin    : [
                     koinVersion: "2.1.5"
+            ],
+            test    : [
+                    junitVersion      : '4.13',
+                    mockitoVersion    : '3.1.0',
+                    robolectricVersion: '4.3.1',
+                    runnerVersion     : '1.2.0',
+                    espressoVersion   : '3.2.0'
             ]
     ]
     libraries = [
             platform: [
-                    kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.platform.kotlin",
-                    kotlinStdLib      : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.platform.kotlin",
-                    kotlinCoroutines  : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.platform.coroutines",
-                    kotlinCoroutinesAndroid  : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.platform.coroutines",
-                    gradle            : "com.android.tools.build:gradle:3.6.3",
+                    kotlinGradlePlugin     : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.platform.kotlin",
+                    kotlinStdLib           : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.platform.kotlin",
+                    kotlinCoroutines       : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.platform.coroutines",
+                    kotlinCoroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.platform.coroutines",
+                    gradle                 : "com.android.tools.build:gradle:3.6.3",
             ],
             android : [
                     core                     : "androidx.core:core-ktx:1.2.0",
@@ -33,7 +40,13 @@ project.ext {
                     supportRecyclerView      : "androidx.recyclerview:recyclerview:1.1.0",
             ],
             test    : [
-                    junit: "junit:junit:4.13"
+                    junit           : "junit:junit:$versions.test.junitVersion",
+                    mockito         : "org.mockito:mockito-core:$versions.test.mockitoVersion",
+                    robolectric     : "org.robolectric:robolectric:$versions.test.robolectricVersion",
+                    runner          : "androidx.test:runner:$versions.test.runnerVersion",
+                    espresso        : "androidx.test.espresso:espresso-core:$versions.test.espressoVersion",
+                    kotlinCoroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.platform.coroutines",
+                    koin            : "org.koin:koin-test:$versions.koin.koinVersion"
             ],
             koin    : [
                     core      : "org.koin:koin-core:$versions.koin.koinVersion",

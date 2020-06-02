@@ -74,4 +74,10 @@ dependencies {
 
     // Unit tests
     testImplementation libraries.test.junit
+    testImplementation libraries.test.mockito
+    testImplementation libraries.test.robolectric
+    testImplementation libraries.test.runner
+    testImplementation libraries.test.espresso
+    testImplementation libraries.test.kotlinCoroutines
+    testImplementation libraries.test.koin
 }
