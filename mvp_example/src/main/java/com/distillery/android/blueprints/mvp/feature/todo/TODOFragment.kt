@@ -35,6 +35,9 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentTodoBinding.inflate(inflater, container, false)
+        binding.buttonAdd.setOnClickListener {
+            presenter.addTodo()
+        }
         presenter.changeView(presenterView)
         if (savedInstanceState == null) {
             presenter.fetchToDo()
