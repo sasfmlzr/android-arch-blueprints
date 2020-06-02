@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.distillery.android.blueprints.mvp.PresenterProvider
 import com.distillery.android.blueprints.mvp.adapter.TODOListAdapter
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.databinding.FragmentTodoBinding
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
 
@@ -18,7 +19,7 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
     }
 
     private lateinit var adapter: TODOListAdapter
-    private var todoModel: TODOModel? = null
+    private var todoModel: TODOModel = TODOModel(listOf())
 
     override val presenterView: TODOContractView by lazy {
         object : TODOContractView(binding) {
@@ -29,12 +30,12 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
         }
     }
 
-    override val presenter: TODOPresenter by lazy { PresenterProvider().getPresenter(this) as TODOPresenter }
+    override val presenter: TODOPresenter by inject { parametersOf(presenterView) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentTodoBinding.inflate(inflater, container, false)
-
+        presenter.changeView(presenterView)
         if (savedInstanceState == null) {
             presenter.fetchToDo()
         } else {
@@ -49,7 +50,7 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
             adapter = TODOListAdapter()
             binding.todoList.adapter = adapter
         }
-        adapter.submitList(todoModel!!.toDoList)
+        adapter.submitList(todoModel.toDoList)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

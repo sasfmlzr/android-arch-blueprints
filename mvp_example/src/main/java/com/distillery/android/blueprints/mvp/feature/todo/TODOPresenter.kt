@@ -15,7 +15,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import kotlin.coroutines.CoroutineContext
 
-class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view), CoroutineScope {
+class TODOPresenter(private var view: TODOContractView?) : BasePresenter(view), CoroutineScope {
 
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -35,6 +35,10 @@ class TODOPresenter(private val view: TODOContractView?) : BasePresenter(view), 
 
     private fun finishLoading() {
         view?.endLoading()
+    }
+
+    fun changeView(view: TODOContractView) {
+        this.view = view
     }
 
     fun fetchToDo() {

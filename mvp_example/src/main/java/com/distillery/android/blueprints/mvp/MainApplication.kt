@@ -1,7 +1,8 @@
 package com.distillery.android.blueprints.mvp
 
 import android.app.Application
-import com.distillery.android.blueprints.mvp.architecture.BasePresenterProvider
+import com.distillery.android.blueprints.mvp.feature.todo.TODOContractView
+import com.distillery.android.blueprints.mvp.feature.todo.TODOPresenter
 import com.distillery.android.domain.FakeToDoRepository
 import com.distillery.android.domain.ToDoRepository
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +16,7 @@ import org.koin.dsl.module
 class MainApplication : Application() {
     private val modules: Module = module {
         single<ToDoRepository>(named("RepositoryScope")) { (scope: CoroutineScope) -> FakeToDoRepository(scope) }
-        single<BasePresenterProvider> { PresenterProvider() }
+        single { (view: TODOContractView) -> TODOPresenter(view) }
     }
 
     override fun onCreate() {
