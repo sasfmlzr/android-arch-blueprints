@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name="com.distillery.android.blueprints.mvvm.MvvmActivity"
-            android:label="MVVM"
+            android:label="@string/module_pattern"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
     </application>
