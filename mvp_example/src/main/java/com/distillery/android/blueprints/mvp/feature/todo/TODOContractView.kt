@@ -5,9 +5,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.distillery.android.blueprints.mvp.architecture.BaseContractView
+import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.R
-import com.distillery.android.mvp_example.databinding.FragmentTodoBinding
 
 abstract class TODOContractView(private val binding: FragmentTodoBinding) : BaseContractView {
 

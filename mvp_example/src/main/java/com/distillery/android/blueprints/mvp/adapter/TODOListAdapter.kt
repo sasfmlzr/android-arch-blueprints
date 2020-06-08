@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.distillery.android.ui.databinding.ItemTodoBinding
 import com.distillery.android.domain.models.ToDoModel
-import com.distillery.android.mvp_example.databinding.ItemTodoBinding
 
 class TODOListAdapter(
     private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.distillery.android.blueprints.mvp.adapter.TODOListAdapter
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
-import com.distillery.android.mvp_example.databinding.FragmentTodoBinding
+import com.distillery.android.ui.databinding.FragmentTodoBinding
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
