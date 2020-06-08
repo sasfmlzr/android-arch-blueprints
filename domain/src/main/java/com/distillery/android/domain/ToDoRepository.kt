@@ -23,4 +23,9 @@ interface ToDoRepository {
      * @throws UnsupportedOperationException when complete To Do with even id
      */
     fun completeToDo(uniqueId: Long)
+
+    /**
+     * Deletes a To Do action asynchronously and deletes it from the existing list of To Dos.
+     */
+    suspend fun deleteToDo(uniqueId: Long)
 }

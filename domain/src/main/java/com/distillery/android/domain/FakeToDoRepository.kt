@@ -2,7 +2,7 @@ package com.distillery.android.domain
 
 import androidx.annotation.VisibleForTesting
 import com.distillery.android.domain.models.ToDoModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -24,18 +24,18 @@ private val idGenerator = AtomicLong(0)
 const val DELAY_OF_VALUES_GENERATOR = 5000L
 
 @VisibleForTesting
-const val DELAY_FOR_VALUE_ADDITION = 1500L
+const val DELAY_FOR_TODO_OPERATION = 1500L
 
 private const val TODOS_ITEMS_TO_THROW = 10
 
-class FakeToDoRepository : ToDoRepository {
+class FakeToDoRepository(private val scope: CoroutineScope) : ToDoRepository {
 
     private val toDos = ConcurrentHashMap<Long, ToDoModel>()
     private val todosChannel = Channel<List<ToDoModel>>()
 
     // generate infinite amount of elements, but throw exception after 10th element
     init {
-        GlobalScope.launch {
+        scope.launch {
             generateValues().collect { model ->
                 saveModel(model)
                 publishChanges()
@@ -50,7 +50,7 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     override suspend fun addToDo(title: String, description: String) {
-        delay(DELAY_FOR_VALUE_ADDITION)
+        delay(DELAY_FOR_TODO_OPERATION)
         createAndSaveModel(title, description)
         throwIfToDoListLimitReached()
         publishChanges()
@@ -61,7 +61,7 @@ class FakeToDoRepository : ToDoRepository {
         // if such model exists update it's completion date
         val model = toDos[uniqueId]?.copy(completedAt = Date())
         // or do nothing at all
-            ?: return
+                ?: return
         saveModel(model)
         publishChanges()
     }
@@ -76,7 +76,7 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     private fun publishChanges() {
-        GlobalScope.launch {
+        scope.launch {
             todosChannel.send(toDos.values.toList())
         }
     }
@@ -104,7 +104,7 @@ class FakeToDoRepository : ToDoRepository {
      */
     private fun throwIfIdIsEven(uniqueId: Long) {
         if (uniqueId <= 2 || uniqueId % 2 != 0L) {
-           return
+            return
         }
         throw UnsupportedOperationException("You died")
     }
@@ -121,5 +121,12 @@ class FakeToDoRepository : ToDoRepository {
             return
         }
         todosChannel.close(IllegalArgumentException("You died"))
+    }
+
+    override suspend fun deleteToDo(uniqueId: Long) {
+        delay(DELAY_FOR_TODO_OPERATION)
+        toDos.remove(uniqueId)
+        throwIfToDoListLimitReached()
+        publishChanges()
     }
 }
