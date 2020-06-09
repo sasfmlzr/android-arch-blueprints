@@ -13,12 +13,12 @@ abstract class TODOContractView(private val binding: FragmentTodoBinding) : Base
 
     override fun startLoading() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.todoList.visibility = View.GONE
+        binding.todoContent.visibility = View.GONE
     }
 
     override fun endLoading() {
         binding.progressBar.visibility = View.GONE
-        binding.todoList.visibility = View.VISIBLE
+        binding.todoContent.visibility = View.VISIBLE
     }
 
     override fun showError(error: String) {

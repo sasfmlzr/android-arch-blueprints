@@ -8,6 +8,7 @@ import com.distillery.android.blueprints.mvp.adapter.TODOListAdapter
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.ui.databinding.FragmentTodoBinding
+import com.google.android.material.snackbar.Snackbar
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
@@ -18,7 +19,8 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
         fun newInstance() = TODOFragment()
     }
 
-    private lateinit var adapter: TODOListAdapter
+    private lateinit var uncompletedTODOAdapter: TODOListAdapter
+    private lateinit var completedTODOAdapter: TODOListAdapter
     private var todoModel: TODOModel = TODOModel(listOf())
 
     override val presenterView: TODOContractView by lazy {
@@ -50,16 +52,32 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
 
     private fun updateAdapter() {
         if (binding.todoList.adapter == null) {
-            adapter = TODOListAdapter({ todo ->
+            uncompletedTODOAdapter = createTODOAdapter()
+            binding.todoList.adapter = uncompletedTODOAdapter
+        }
+        if (binding.completedTodoList.adapter == null) {
+            completedTODOAdapter = createTODOAdapter()
+            binding.completedTodoList.adapter = completedTODOAdapter
+        }
+        uncompletedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt == null })
+        completedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt != null })
+    }
+
+    private fun createTODOAdapter() =
+            TODOListAdapter({ todo ->
                 todoModel = TODOModel(todoModel.toDoList.filter { it != todo })
-                adapter.submitList(todoModel.toDoList)
+                showDeleteSnackbar()
+                uncompletedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt == null })
+                completedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt != null })
             }, { todo ->
                 presenter.completeToDo(todo)
                 false
             })
-            binding.todoList.adapter = adapter
-        }
-        adapter.submitList(todoModel.toDoList)
+
+    private fun showDeleteSnackbar() {
+        val snackbar = Snackbar.make(binding.root, "Item has been deleted", Snackbar.LENGTH_LONG)
+        snackbar.setAction("OK") {}
+        snackbar.show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

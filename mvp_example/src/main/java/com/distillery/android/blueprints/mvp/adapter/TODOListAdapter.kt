@@ -1,5 +1,6 @@
 package com.distillery.android.blueprints.mvp.adapter
 
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -32,6 +33,10 @@ class TODOListAdapter(
                     binding.completedCheckBox.isChecked = false
                     onCompleteClickListener(toDoModel)
                 }
+            }
+            if (toDoModel.completedAt != null) {
+                binding.titleTextView.paintFlags = binding.titleTextView.paintFlags or STRIKE_THRU_TEXT_FLAG
+                binding.descriptionTextView.paintFlags = binding.descriptionTextView.paintFlags or STRIKE_THRU_TEXT_FLAG
             }
         }
     }
