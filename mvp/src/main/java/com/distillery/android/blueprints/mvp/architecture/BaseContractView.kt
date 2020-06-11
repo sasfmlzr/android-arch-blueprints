@@ -4,5 +4,4 @@ interface BaseContractView {
     fun startLoading()
     fun endLoading()
     fun showError(error: String)
-    fun hideError()
 }

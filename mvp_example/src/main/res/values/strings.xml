@@ -3,4 +3,5 @@
     <string name="todo_dialog_title">TODO task</string>
     <string name="snackbar_delete_message">Item has been deleted</string>
     <string name="ok">OK</string>
+    <string name="toolbar_title">Todo list</string>
 </resources>

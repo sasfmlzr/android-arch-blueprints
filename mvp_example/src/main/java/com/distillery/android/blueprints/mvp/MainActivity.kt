@@ -16,6 +16,6 @@ class MainActivity : BaseActivity() {
                     .replace(R.id.container, ToDoFragment.newInstance())
                     .commitNow()
         }
-        supportActionBar?.title = "Todo list"
+        supportActionBar?.title = getString(R.string.toolbar_title)
     }
 }

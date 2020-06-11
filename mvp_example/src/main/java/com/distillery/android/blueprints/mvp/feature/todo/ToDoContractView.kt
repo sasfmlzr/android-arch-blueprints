@@ -5,9 +5,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.distillery.android.blueprints.mvp.architecture.BaseContractView
-import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.R
+import com.distillery.android.ui.databinding.FragmentTodoBinding
 
 abstract class ToDoContractView(private val binding: FragmentTodoBinding) : BaseContractView {
 
@@ -26,11 +26,6 @@ abstract class ToDoContractView(private val binding: FragmentTodoBinding) : Base
         toast.show()
     }
 
-    override fun hideError() {
-        val toast = Toast.makeText(binding.root.context, "Mocked error", Toast.LENGTH_SHORT)
-        toast.show()
-    }
-
     abstract fun showToDoList(list: List<ToDoModel>)
 
     fun addToDo(toDoAction: (String, String) -> Unit) {
@@ -38,7 +33,7 @@ abstract class ToDoContractView(private val binding: FragmentTodoBinding) : Base
                 .setTitle(binding.root.context.getString(R.string.todo_dialog_title))
                 .setMessage(binding.root.context.getString(R.string.todo_dialog_message))
                 .setView(R.layout.dialog_add_todo)
-                .setPositiveButton("Ok") { dialog, _ ->
+                .setPositiveButton(binding.root.context.getString(R.string.ok)) { dialog, _ ->
                     val title = (dialog as AlertDialog).findViewById<EditText>(R.id.title)?.text.toString()
                     val description = dialog.findViewById<EditText>(R.id.description)?.text.toString()
                     toDoAction(title, description)
