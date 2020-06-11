@@ -5,4 +5,4 @@ import com.distillery.android.domain.models.ToDoModel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class TODOModel(val toDoList: List<ToDoModel>) : Parcelable
+data class ToDoModel(val toDoList: List<ToDoModel>) : Parcelable

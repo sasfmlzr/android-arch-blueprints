@@ -9,7 +9,7 @@ import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.mvp_example.R
 
-abstract class TODOContractView(private val binding: FragmentTodoBinding) : BaseContractView {
+abstract class ToDoContractView(private val binding: FragmentTodoBinding) : BaseContractView {
 
     override fun startLoading() {
         binding.progressBar.visibility = View.VISIBLE
@@ -27,7 +27,7 @@ abstract class TODOContractView(private val binding: FragmentTodoBinding) : Base
     }
 
     override fun hideError() {
-        val toast = Toast.makeText(binding.root.context, "Hide error", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(binding.root.context, "Mocked error", Toast.LENGTH_SHORT)
         toast.show()
     }
 

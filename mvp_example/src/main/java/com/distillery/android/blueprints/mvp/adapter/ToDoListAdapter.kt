@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.ui.databinding.ItemTodoBinding
 import com.distillery.android.domain.models.ToDoModel
 
-class TODOListAdapter(
+class ToDoListAdapter(
     private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
     private val onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
 ) :
-        ListAdapter<ToDoModel, TODOListAdapter.TODOViewHolder>(TODOListDiffCallback()) {
+        ListAdapter<ToDoModel, ToDoListAdapter.ToDoViewHolder>(ToDoListDiffCallback()) {
 
-    class TODOViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
             toDoModel: ToDoModel,
             onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
@@ -41,8 +41,8 @@ class TODOListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TODOViewHolder {
-        return TODOViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
+        return ToDoViewHolder(
                 ItemTodoBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
@@ -51,7 +51,7 @@ class TODOListAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: TODOViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         holder.bind(getItem(position), onDeleteClickListener, onCompleteClickListener)
     }
 }

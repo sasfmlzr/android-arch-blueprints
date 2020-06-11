@@ -15,7 +15,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.CoroutineContext
 
-class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), CoroutineScope {
+class ToDoPresenter(private var view: ToDoContractView) : BasePresenter(view), CoroutineScope {
 
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -31,7 +31,7 @@ class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), C
         view.endLoading()
     }
 
-    fun changeView(view: TODOContractView) {
+    fun changeView(view: ToDoContractView) {
         this.view = view
     }
 
@@ -66,9 +66,9 @@ class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), C
         }
     }
 
-    fun completeToDo(todoModel: ToDoModel) {
+    fun completeToDo(toDoModel: ToDoModel) {
         try {
-            todoRepo.completeToDo(todoModel.uniqueId)
+            todoRepo.completeToDo(toDoModel.uniqueId)
         } catch (e: UnsupportedOperationException) {
             view.showError(e.message!!)
         }

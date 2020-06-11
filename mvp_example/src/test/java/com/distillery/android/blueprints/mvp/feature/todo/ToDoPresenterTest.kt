@@ -25,13 +25,13 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
 @ExperimentalCoroutinesApi
-class TODOPresenterTest : KoinTest {
+class ToDoPresenterTest : KoinTest {
 
     @Mock
-    private lateinit var view: TODOContractView
+    private lateinit var view: ToDoContractView
 
     @InjectMocks
-    private lateinit var presenter: TODOPresenter
+    private lateinit var presenter: ToDoPresenter
 
     @Mock
     private lateinit var todoRepo: ToDoRepository
@@ -53,7 +53,7 @@ class TODOPresenterTest : KoinTest {
         }
 
         MockitoAnnotations.initMocks(this)
-        presenter = TODOPresenter(view)
+        presenter = ToDoPresenter(view)
         Dispatchers.setMain(TestCoroutineDispatcher())
     }
 
