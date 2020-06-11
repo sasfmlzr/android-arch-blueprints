@@ -52,11 +52,17 @@ class TODOPresenter(private var view: TODOContractView) : BasePresenter(view), C
         }
     }
 
-    fun addTodo() {
+    fun addToDo() {
         view.addToDo { title, description ->
             launch {
                 todoRepo.addToDo(title, description)
             }
+        }
+    }
+
+    fun deleteToDo(uniqueId: Long) {
+        launch {
+            todoRepo.deleteToDo(uniqueId)
         }
     }
 

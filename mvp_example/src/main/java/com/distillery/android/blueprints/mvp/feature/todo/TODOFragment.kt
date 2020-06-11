@@ -38,7 +38,7 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentTodoBinding.inflate(inflater, container, false)
         binding.buttonAdd.setOnClickListener {
-            presenter.addTodo()
+            presenter.addToDo()
         }
         presenter.changeView(presenterView)
         if (savedInstanceState == null) {
@@ -65,10 +65,8 @@ class TODOFragment : BaseFragment<FragmentTodoBinding, TODOContractView>() {
 
     private fun createTODOAdapter() =
             TODOListAdapter({ todo ->
-                todoModel = TODOModel(todoModel.toDoList.filter { it != todo })
+                presenter.deleteToDo(todo.uniqueId)
                 showDeleteSnackbar()
-                uncompletedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt == null })
-                completedTODOAdapter.submitList(todoModel.toDoList.filter { it.completedAt != null })
             }, { todo ->
                 presenter.completeToDo(todo)
                 false
