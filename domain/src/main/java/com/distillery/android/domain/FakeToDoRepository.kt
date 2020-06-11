@@ -24,7 +24,7 @@ private val idGenerator = AtomicLong(0)
 const val DELAY_OF_VALUES_GENERATOR = 5000L
 
 @VisibleForTesting
-const val DELAY_FOR_VALUE_ADDITION = 1500L
+const val DELAY_FOR_TODO_OPERATION = 1500L
 
 private const val TODOS_ITEMS_TO_THROW = 10
 
@@ -50,7 +50,7 @@ class FakeToDoRepository(private val scope: CoroutineScope) : ToDoRepository {
     }
 
     override suspend fun addToDo(title: String, description: String) {
-        delay(DELAY_FOR_VALUE_ADDITION)
+        delay(DELAY_FOR_TODO_OPERATION)
         createAndSaveModel(title, description)
         throwIfToDoListLimitReached()
         publishChanges()
@@ -61,7 +61,7 @@ class FakeToDoRepository(private val scope: CoroutineScope) : ToDoRepository {
         // if such model exists update it's completion date
         val model = toDos[uniqueId]?.copy(completedAt = Date())
         // or do nothing at all
-            ?: return
+                ?: return
         saveModel(model)
         publishChanges()
     }
@@ -121,5 +121,12 @@ class FakeToDoRepository(private val scope: CoroutineScope) : ToDoRepository {
             return
         }
         todosChannel.close(IllegalArgumentException("You died"))
+    }
+
+    override suspend fun deleteToDo(uniqueId: Long) {
+        delay(DELAY_FOR_TODO_OPERATION)
+        toDos.remove(uniqueId)
+        throwIfToDoListLimitReached()
+        publishChanges()
     }
 }

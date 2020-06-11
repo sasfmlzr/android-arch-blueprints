@@ -25,8 +25,7 @@ class FakeToDoRepositoryTest {
 
     @Before
     fun setup() {
-        val scope = GlobalScope
-        repository = FakeToDoRepository(scope)
+        repository = FakeToDoRepository(scope = GlobalScope)
     }
 
     @Test
@@ -67,7 +66,32 @@ class FakeToDoRepositoryTest {
             repository.addToDo("stub", "stub")
         }
         // and delay is past
-        delay(DELAY_FOR_VALUE_ADDITION + FRACTION_OF_TIME)
+        delay(DELAY_FOR_TODO_OPERATION + FRACTION_OF_TIME)
+
+        // then list has 1 element
+        assertEquals(1, listSize)
+
+        subscription.cancel()
+    }
+
+    @Test
+    fun `repository delete values after 1_5 seconds`() = runBlocking {
+        var listSize = 0
+        val subscription = launch {
+            repository.fetchToDos().collect {
+                listSize = it.size
+            }
+        }
+        check(listSize == 0)
+
+        // when enough time has passed 2 elements were added to list
+        delay(DELAY_OF_VALUES_GENERATOR * EXPECTED_AMOUNT_OF_ELEMENTS + FRACTION_OF_TIME)
+
+        // when we delete element
+        repository.deleteToDo(0)
+
+        // and delay is past
+        delay(FRACTION_OF_TIME)
 
         // then list has 1 element
         assertEquals(1, listSize)
@@ -85,7 +109,7 @@ class FakeToDoRepositoryTest {
                 listOfTodos = it
             }
         }
-        delay(DELAY_FOR_VALUE_ADDITION + FRACTION_OF_TIME)
+        delay(DELAY_FOR_TODO_OPERATION + FRACTION_OF_TIME)
         check(listOfTodos.size == 1)
         // and no elements are completed
         assertTrue(listOfTodos.all { it.completedAt == null })
