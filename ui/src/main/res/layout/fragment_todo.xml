@@ -42,7 +42,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/divider_margin_vertical"
                 android:layout_marginBottom="@dimen/divider_margin_vertical"
-                android:background="@color/dividerColor"
+                android:background="@color/divider"
                 app:layout_constraintBottom_toTopOf="@id/completedTodoList"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

@@ -1,0 +1,4 @@
+<resources>
+    <string name="todo_dialog_message">TODO will be added</string>
+    <string name="todo_dialog_title">TODO task</string>
+</resources>
