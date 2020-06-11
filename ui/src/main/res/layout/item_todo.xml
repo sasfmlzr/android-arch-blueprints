@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:drawable/ic_menu_close_clear_cancel"
-        android:backgroundTint="@color/iconColor"
+        android:backgroundTint="@color/deleteIcon"
         android:contentDescription="@string/delete"
         android:scaleX="0.7"
         android:scaleY="0.7"
