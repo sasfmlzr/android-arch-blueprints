@@ -11,4 +11,5 @@
     <dimen name="dialog_description_margin_top">4dp</dimen>
     <dimen name="dialog_description_margin_end">4dp</dimen>
     <dimen name="dialog_description_margin_bottom">16dp</dimen>
+    <dimen name="item_todo_title_text_size">16sp</dimen>
 </resources>
