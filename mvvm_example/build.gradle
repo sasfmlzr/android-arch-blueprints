@@ -26,6 +26,7 @@ dependencies {
     implementation libraries.android.core
     implementation libraries.android.supportAppCompat
     implementation libraries.android.supportConstraintLayout
+    implementation libraries.android.material
 
     // Unit tests
     testImplementation libraries.test.junit
