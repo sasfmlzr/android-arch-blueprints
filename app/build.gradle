@@ -72,7 +72,6 @@ dependencies {
     testImplementation libraries.test.junit
 
     // Koin
-    implementation libraries.koin.core
     implementation libraries.koin.android
     implementation libraries.koin.viewModel
     testImplementation libraries.koin.test
