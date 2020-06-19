@@ -21,6 +21,8 @@ dependencies {
 
     // Platform libraries
     implementation libraries.platform.kotlinStdLib
+    implementation libraries.platform.kotlinCoroutines
+    implementation libraries.platform.kotlinCoroutinesAndroid
 
     // Android libraries
     implementation libraries.android.core
@@ -30,4 +32,10 @@ dependencies {
 
     // Unit tests
     testImplementation libraries.test.junit
+
+    // Koin
+    api libraries.koin.core
+    api libraries.koin.android
+    api libraries.koin.viewModel
+    testImplementation libraries.koin.test
 }
