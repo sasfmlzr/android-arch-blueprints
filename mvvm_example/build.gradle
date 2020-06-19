@@ -34,7 +34,6 @@ dependencies {
     testImplementation libraries.test.junit
 
     // Koin
-    api libraries.koin.core
     api libraries.koin.android
     api libraries.koin.viewModel
     testImplementation libraries.koin.test

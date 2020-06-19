@@ -13,6 +13,6 @@ class MvvmActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mvvm_activity)
-        todoViewModel?.getToDoList()
+        todoViewModel.getToDoList()
     }
 }
