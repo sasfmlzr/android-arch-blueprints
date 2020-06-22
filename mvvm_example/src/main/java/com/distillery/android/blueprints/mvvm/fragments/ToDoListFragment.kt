@@ -1,6 +1,5 @@
 package com.distillery.android.blueprints.mvvm.fragments
 
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.blueprints.mvvm.ItemAction
 import com.distillery.android.blueprints.mvvm.SimpleAdapter
 import com.distillery.android.blueprints.mvvm.TodoViewModel
+import com.distillery.android.blueprints.mvvm.strikeThrough
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.distillery.android.ui.databinding.ItemTodoBinding
@@ -22,8 +22,8 @@ class ToDoListFragment : Fragment() {
     // this  view model will be shared with  AddTodoFragment with Activity scope
     private val todoViewModel: TodoViewModel by sharedViewModel()
     private lateinit var binding: FragmentTodoBinding
-    private val todoListAdapter = getSimpleAdapter(false)
-    private val completedListAdapter = getSimpleAdapter(true)
+    private val todoListAdapter = getSimpleAdapter(isCompletedAdapter = false)
+    private val completedListAdapter = getSimpleAdapter(isCompletedAdapter = true)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +43,8 @@ class ToDoListFragment : Fragment() {
     }
 
     /**
-     * initiate recycler view with adapter, layout manager and observer
+     * initializes RecyclerView with adapter, layout manager and observer
+     * also sets up divider visibility on observer
      */
     private fun setupList(
         recyclerView: RecyclerView,
@@ -60,38 +61,41 @@ class ToDoListFragment : Fragment() {
     }
 
     /**
-     * sets the divider line visibility by checking list items count
-     * if the onle of the both list is empty then it hides the line otherwise makes visible
+     * sets the divider line visibility by checking completed and non completed list items
+     * if the only of the both list is empty then it hides the line otherwise makes it visible
      */
     private fun setDividerVisibility() {
-        binding.divider.visibility = if (completedListAdapter.list.isEmpty() || todoListAdapter.list.isEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        val isBothListEmpty = completedListAdapter.list.isEmpty() || todoListAdapter.list.isEmpty()
+        binding.divider.visibility = (if (isBothListEmpty) View.GONE else View.VISIBLE)
     }
 
     /**
-     * set data and listeners to the item view on the list
-     * this is used for both list adapter (completed and non completed list)
+     * set data (ToDoModel) and listeners to the item view on the list
+     * this is used for both list adapters (completed and non completed list)
      * using boolean param isCompletedAdapter
      */
     private fun ItemTodoBinding.setDataToItemView(
         todoModel: ToDoModel,
         isCompletedAdapter: Boolean
     ) {
-        if (isCompletedAdapter) {
-            completedCheckBox.isChecked = true
-            completedCheckBox.isEnabled = false
-            titleTextView.paintFlags = titleTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            completedCheckBox.isChecked = false
-            completedCheckBox.isEnabled = true
-            completedCheckBox.setOnClickListener { onListItemClick(ItemAction.COMPLETED, todoModel) }
-        }
+        setCheckboxState(isCompletedAdapter, todoModel)
+        titleTextView.strikeThrough(isCompletedAdapter)
         titleTextView.text = todoModel.title
         descriptionTextView.text = todoModel.description
         deleteButton.setOnClickListener { onListItemClick(ItemAction.DELETED, todoModel) }
+    }
+
+    /**
+     * adds listener and checkbox states (isEnable, isChecked)
+     * disables checkbox if its on completed list and set to checked state.
+     * enables checkbox if its on the non completed list and set to unchecked state with onclickListener
+     */
+    private fun ItemTodoBinding.setCheckboxState(isCompletedAdapter: Boolean, todoModel: ToDoModel) {
+        completedCheckBox.apply {
+            isChecked = isCompletedAdapter
+            isEnabled = !isCompletedAdapter
+            if (!isCompletedAdapter) setOnClickListener { onListItemClick(ItemAction.COMPLETED, todoModel) }
+        }
     }
 
     /**
@@ -116,11 +120,10 @@ class ToDoListFragment : Fragment() {
      * initiates and returns SimpleAdapter with view binding, setDataToItemView lambda
      * and a flag 'isCompletedAdapter'
      */
-    private fun getSimpleAdapter(isCompletedAdapter: Boolean): SimpleAdapter<ToDoModel, ItemTodoBinding> {
-        return SimpleAdapter<ToDoModel, ItemTodoBinding>(
-                getViewBindingForItemV = ::getViewBindingForItemV
-        ) { setDataToItemView(todoModel = it, isCompletedAdapter = isCompletedAdapter) }
-    }
+    private fun getSimpleAdapter(isCompletedAdapter: Boolean) =
+            SimpleAdapter<ToDoModel, ItemTodoBinding>(
+                    getViewBindingForItemV = ::getViewBindingForItemV
+            ) { setDataToItemView(todoModel = it, isCompletedAdapter = isCompletedAdapter) }
 
     /**
      * navigates to add item fragment using fragment transaction
