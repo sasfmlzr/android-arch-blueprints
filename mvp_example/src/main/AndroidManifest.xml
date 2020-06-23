@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.distillery.android.mvp_example">
+    package="com.distillery.android.blueprints.mvp">
 
     <application
         android:name="com.distillery.android.blueprints.mvp.MainApplication"

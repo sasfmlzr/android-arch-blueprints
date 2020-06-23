@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.distillery.android.blueprints.mvp.R
 import com.distillery.android.blueprints.mvp.adapter.ToDoListAdapter
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
-import com.distillery.android.mvp_example.R
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.core.inject

@@ -3,7 +3,6 @@ package com.distillery.android.blueprints.mvp
 import android.os.Bundle
 import com.distillery.android.blueprints.mvp.architecture.BaseActivity
 import com.distillery.android.blueprints.mvp.feature.todo.ToDoFragment
-import com.distillery.android.mvp_example.R
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
