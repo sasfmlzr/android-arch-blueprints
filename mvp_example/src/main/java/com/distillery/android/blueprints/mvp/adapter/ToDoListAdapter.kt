@@ -1,12 +1,12 @@
 package com.distillery.android.blueprints.mvp.adapter
 
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.distillery.android.ui.databinding.ItemTodoBinding
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.ui.databinding.ItemTodoBinding
+import strikeThrough
 
 class ToDoListAdapter(
     private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
@@ -15,23 +15,25 @@ class ToDoListAdapter(
 
     inner class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(toDoModel: ToDoModel) {
-            binding.titleTextView.text = toDoModel.title
-            binding.descriptionTextView.text = toDoModel.description
-            binding.deleteButton.setOnClickListener {
-                onDeleteClickListener(toDoModel)
-            }
-            binding.completedCheckBox.isChecked = toDoModel.completedAt != null
-            binding.completedCheckBox.setOnClickListener {
-                if (!binding.completedCheckBox.isChecked) {
-                    binding.completedCheckBox.isChecked = true
-                } else {
-                    binding.completedCheckBox.isChecked = false
-                    onCompleteClickListener(toDoModel)
+            binding.apply {
+                titleTextView.text = toDoModel.title
+                descriptionTextView.text = toDoModel.description
+                deleteButton.setOnClickListener {
+                    onDeleteClickListener(toDoModel)
                 }
-            }
-            if (toDoModel.completedAt != null) {
-                binding.titleTextView.paintFlags = binding.titleTextView.paintFlags or STRIKE_THRU_TEXT_FLAG
-                binding.descriptionTextView.paintFlags = binding.descriptionTextView.paintFlags or STRIKE_THRU_TEXT_FLAG
+                completedCheckBox.isChecked = toDoModel.completedAt != null
+                completedCheckBox.setOnClickListener {
+                    if (completedCheckBox.isChecked) {
+                        completedCheckBox.isChecked = false
+                        onCompleteClickListener(toDoModel)
+                    } else {
+                        completedCheckBox.isChecked = true
+                    }
+                }
+                if (toDoModel.completedAt != null) {
+                    titleTextView.strikeThrough()
+                    descriptionTextView.strikeThrough()
+                }
             }
         }
     }
