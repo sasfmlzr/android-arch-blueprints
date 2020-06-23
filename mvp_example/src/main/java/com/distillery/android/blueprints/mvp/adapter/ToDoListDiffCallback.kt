@@ -5,7 +5,7 @@ import com.distillery.android.domain.models.ToDoModel
 
 class ToDoListDiffCallback : DiffUtil.ItemCallback<ToDoModel>() {
     override fun areItemsTheSame(p0: ToDoModel, p1: ToDoModel): Boolean {
-        return p0 == p1
+        return p0.uniqueId == p1.uniqueId
     }
 
     override fun areContentsTheSame(p0: ToDoModel, p1: ToDoModel): Boolean {
