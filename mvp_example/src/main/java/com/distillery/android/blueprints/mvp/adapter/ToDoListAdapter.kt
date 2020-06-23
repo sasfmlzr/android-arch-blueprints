@@ -13,12 +13,8 @@ class ToDoListAdapter(
     private val onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
 ) : ListAdapter<ToDoModel, ToDoListAdapter.ToDoViewHolder>(ToDoListDiffCallback()) {
 
-    class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            toDoModel: ToDoModel,
-            onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
-            onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
-        ) {
+    inner class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(toDoModel: ToDoModel) {
             binding.titleTextView.text = toDoModel.title
             binding.descriptionTextView.text = toDoModel.description
             binding.deleteButton.setOnClickListener {
@@ -51,6 +47,6 @@ class ToDoListAdapter(
     }
 
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
-        holder.bind(getItem(position), onDeleteClickListener, onCompleteClickListener)
+        holder.bind(getItem(position))
     }
 }
