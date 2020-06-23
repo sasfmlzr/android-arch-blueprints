@@ -11,8 +11,8 @@ android {
         targetSdkVersion versions.platform.targetSdk
         vectorDrawables.useSupportLibrary = true
     }
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding true
     }
 }
 
