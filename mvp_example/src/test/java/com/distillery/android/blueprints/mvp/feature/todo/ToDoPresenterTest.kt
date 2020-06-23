@@ -28,7 +28,7 @@ import org.mockito.MockitoAnnotations
 class ToDoPresenterTest : KoinTest {
 
     @Mock
-    private lateinit var view: ToDoContractView
+    private lateinit var view: ToDoView
 
     @InjectMocks
     private lateinit var presenter: ToDoPresenter

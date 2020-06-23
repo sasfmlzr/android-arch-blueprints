@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
-class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoContractView>() {
+class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
 
     companion object {
         private const val TODO_MODEL_BUNDLE_KEY = "todo_key"
@@ -24,8 +24,8 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoContractView>() {
     private lateinit var completedToDoAdapter: ToDoListAdapter
     private var toDoModel: com.distillery.android.blueprints.mvp.feature.todo.ToDoModel = ToDoModel(listOf())
 
-    override val presenterView: ToDoContractView by lazy {
-        object : ToDoContractView(binding) {
+    override val presenterView: ToDoView by lazy {
+        object : ToDoView(binding) {
             override fun showToDoList(list: List<ToDoModel>) {
                 toDoModel = ToDoModel(list)
                 updateAdapter()

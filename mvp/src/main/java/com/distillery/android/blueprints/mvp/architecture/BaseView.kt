@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvp.architecture
 
-interface BaseContractView {
+interface BaseView {
     fun startLoading()
     fun endLoading()
     fun showError(error: String)
