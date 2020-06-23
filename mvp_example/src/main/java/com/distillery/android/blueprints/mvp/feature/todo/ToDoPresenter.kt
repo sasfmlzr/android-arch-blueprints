@@ -15,7 +15,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.CoroutineContext
 
-class ToDoPresenter(private var view: ToDoView) : BasePresenter(view), CoroutineScope {
+class ToDoPresenter(override var view: ToDoView) : BasePresenter<ToDoView>(view), CoroutineScope {
 
     private val job = Job()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
