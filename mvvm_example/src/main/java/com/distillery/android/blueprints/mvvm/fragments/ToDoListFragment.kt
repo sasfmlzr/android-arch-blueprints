@@ -9,10 +9,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.distillery.android.blueprints.mvvm.ItemAction
-import com.distillery.android.blueprints.mvvm.SimpleAdapter
 import com.distillery.android.blueprints.mvvm.TodoViewModel
-import com.distillery.android.blueprints.mvvm.strikeThrough
+import com.distillery.android.blueprints.ui.SimpleAdapter
+import com.distillery.android.blueprints.ui.strikeThrough
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.distillery.android.ui.databinding.ItemTodoBinding
@@ -140,6 +139,10 @@ class ToDoListFragment : Fragment() {
         //                .addToBackStack(null)
         //                .replace(R.id.container, AddTodoFragment.newInstance())
         //                .commit()
+    }
+
+    enum class ItemAction {
+        COMPLETED, DELETED
     }
 
     companion object {

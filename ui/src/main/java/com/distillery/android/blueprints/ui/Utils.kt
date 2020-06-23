@@ -1,4 +1,4 @@
-package com.distillery.android.blueprints.mvvm
+package com.distillery.android.blueprints.ui
 
 import android.graphics.Paint
 import android.widget.TextView
