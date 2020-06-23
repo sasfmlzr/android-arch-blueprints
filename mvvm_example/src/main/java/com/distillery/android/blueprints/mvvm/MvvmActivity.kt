@@ -3,7 +3,7 @@ package com.distillery.android.blueprints.mvvm
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.distillery.android.blueprints.mvvm.fragments.ToDoListFragment
-import com.distillery.android.ui.R
+import com.distillery.android.ui.databinding.ActivityTodoBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MvvmActivity : AppCompatActivity() {
@@ -12,10 +12,11 @@ class MvvmActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todo)
+        val binding = ActivityTodoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ToDoListFragment.newInstance())
+                .replace(binding.container.id, ToDoListFragment.newInstance())
                 .commit()
     }
 }

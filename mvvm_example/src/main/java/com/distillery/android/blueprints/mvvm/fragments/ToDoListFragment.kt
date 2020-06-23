@@ -21,7 +21,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class ToDoListFragment : Fragment() {
     // this  view model will be shared with  AddTodoFragment with Activity scope
     private val todoViewModel: TodoViewModel by sharedViewModel()
-    private lateinit var binding: FragmentTodoBinding
+    private var _binding: FragmentTodoBinding? = null
+    private val binding get() = _binding!! // use this property only between onCreateView and onDestroyView
     private val todoListAdapter = getSimpleAdapter(isCompletedAdapter = false)
     private val completedListAdapter = getSimpleAdapter(isCompletedAdapter = true)
 
@@ -30,7 +31,7 @@ class ToDoListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentTodoBinding.inflate(inflater, container, false)
+        _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -40,6 +41,11 @@ class ToDoListFragment : Fragment() {
         setupList(binding.completedTodoList, completedListAdapter, todoViewModel.completedTodoListLD)
         setDividerVisibility()
         binding.buttonAdd.setOnClickListener { navigateToAddItemFragment() }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     /**
