@@ -11,8 +11,7 @@ import com.distillery.android.domain.models.ToDoModel
 class ToDoListAdapter(
     private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
     private val onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
-) :
-        ListAdapter<ToDoModel, ToDoListAdapter.ToDoViewHolder>(ToDoListDiffCallback()) {
+) : ListAdapter<ToDoModel, ToDoListAdapter.ToDoViewHolder>(ToDoListDiffCallback()) {
 
     class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
