@@ -6,5 +6,5 @@ sealed class ToDoState<out T> {
     data class ErrorState (val errorMsg: Throwable?) : ToDoState<Nothing>()
     data class SaveToDoState<out T>(val title: String, val description: String) : ToDoState<T>()
     data class DeleteState(val id: Long) : ToDoState<Unit>()
-    data class ConfirmationState(val id: Int) : ToDoState<Unit>()
+    data class ConfirmationState(val id: Long) : ToDoState<Unit>()
 }

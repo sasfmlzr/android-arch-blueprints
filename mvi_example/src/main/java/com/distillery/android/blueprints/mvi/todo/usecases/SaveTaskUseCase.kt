@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.net.ConnectException
 
 class SaveTaskUseCase : KoinComponent {
     private val toDoRepo: ToDoRepository by inject()
@@ -14,13 +15,13 @@ class SaveTaskUseCase : KoinComponent {
             try {
                 toDoRepo.addToDo(title, description)
                 emit(ToDoState.ConfirmationState(SUCCESS))
-            } catch (connectionException: Exception) {
+            } catch (connectionException: ConnectException) {
                 emit(ToDoState.ErrorState(connectionException))
             }
         }
     }
 
     companion object {
-        const val SUCCESS = 1
+        const val SUCCESS = 1L
     }
 }

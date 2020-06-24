@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.lang.Exception
+import java.net.ConnectException
 
 class DeleteTaskUseCase : KoinComponent {
     val toDoRepo: ToDoRepository by inject()
@@ -16,13 +16,13 @@ class DeleteTaskUseCase : KoinComponent {
             try {
                 toDoRepo.deleteToDo(idUnique)
                 emit(ToDoState.ConfirmationState(SUCCESS_DELETION))
-            } catch (connectException: Exception) {
+            } catch (connectException: ConnectException) {
                 emit(ToDoState.ErrorState(connectException))
             }
         }
     }
 
     companion object {
-        const val SUCCESS_DELETION = 0
+        const val SUCCESS_DELETION = 0L
     }
 }
