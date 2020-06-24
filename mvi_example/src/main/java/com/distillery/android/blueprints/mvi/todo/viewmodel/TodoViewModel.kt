@@ -1,5 +1,5 @@
 package com.distillery.android.blueprints.mvi.todo.viewmodel
 
-class ToDoViewModel {
+class TodoViewModel {
     // TODO: Configure Presenter
 }
