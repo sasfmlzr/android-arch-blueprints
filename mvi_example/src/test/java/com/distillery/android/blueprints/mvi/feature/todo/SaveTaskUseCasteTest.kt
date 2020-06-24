@@ -38,24 +38,20 @@ class SaveTaskUseCasteTest : KoinTest {
     }
 
     @Test
-    fun `add succesfully new task`() {
-        runBlocking {
-            `when`(mockRepo.addToDo("empty", "empty")).thenReturn(Unit)
-            val result = saveTaskUseCase.saveTask("empty", "empty")
-            result.collect {
-                assertTrue(it is TodoState.ConfirmationState)
-            }
+    fun `add succesfully new task`() = runBlocking {
+        `when`(mockRepo.addToDo("empty", "empty")).thenReturn(Unit)
+        val result = saveTaskUseCase.saveTask("empty", "empty")
+        result.collect {
+            assertTrue(it is TodoState.ConfirmationState)
         }
     }
 
     @Test
-    fun `error adding new task`() {
-        runBlocking {
-            given(mockRepo.addToDo("empty", "string")).willThrow(RuntimeException("TestException"))
-            val result = saveTaskUseCase.saveTask("empty", "string")
-            result.collect {
-                assertTrue(it is TodoState.ErrorState)
-            }
+    fun `error adding new task`() = runBlocking {
+        given(mockRepo.addToDo("empty", "string")).willThrow(RuntimeException("TestException"))
+        val result = saveTaskUseCase.saveTask("empty", "string")
+        result.collect {
+            assertTrue(it is TodoState.ErrorState)
         }
     }
 

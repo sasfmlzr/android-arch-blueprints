@@ -9,11 +9,11 @@ import org.koin.core.inject
 import java.net.ConnectException
 
 class SaveTaskUseCase : KoinComponent {
-    private val toDoRepo: ToDoRepository by inject()
+    private val toDoRepoRepository: ToDoRepository by inject()
     suspend fun saveTask(title: String, description: String): Flow<TodoState<Unit>> {
         return flow {
             try {
-                toDoRepo.addToDo(title, description)
+                toDoRepoRepository.addToDo(title, description)
                 emit(TodoState.ConfirmationState(SUCCESS))
             } catch (connectionException: ConnectException) {
                 emit(TodoState.ErrorState(connectionException))

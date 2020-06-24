@@ -41,8 +41,7 @@ class GetToDoListUseCaseTest : KoinTest {
     }
 
     @Test
-    fun `retrieve DataState with ToDoList`() {
-        runBlocking {
+    fun `retrieve DataState with ToDoList`() = runBlocking {
             val mockedFlow = flow {
                 emit(listTasks)
             }
@@ -54,7 +53,6 @@ class GetToDoListUseCaseTest : KoinTest {
                 Assert.assertEquals(dataSate.todoListFlow.first(), (it as TodoState.DataState).todoListFlow.first())
             }
         }
-    }
 
     @After
     fun after() {

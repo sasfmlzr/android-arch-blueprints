@@ -11,13 +11,13 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class GetToDoListUseCase : KoinComponent {
-    private val toDoRepo: ToDoRepository by inject()
+    private val toDoRepository: ToDoRepository by inject()
 
     suspend fun getToDoList(): Flow<TodoState<List<ToDoModel>>> {
         return flow {
-            toDoRepo.fetchToDos().catch { e ->
-                emit(TodoState.ErrorState(e.cause))
-            }.map { emit(TodoState.DataState(it)) }
+            toDoRepository.fetchToDos()
+                    .catch { e -> emit(TodoState.ErrorState(e.cause)) }
+                    .map { emit(TodoState.DataState(it)) }
         }
     }
 }

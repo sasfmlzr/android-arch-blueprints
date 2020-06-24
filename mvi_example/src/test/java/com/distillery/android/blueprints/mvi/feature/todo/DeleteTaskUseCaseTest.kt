@@ -40,26 +40,22 @@ class DeleteTaskUseCaseTest : KoinTest {
     }
 
     @Test
-    fun `add succesfully new task`() {
-        runBlocking {
+    fun `add succesfully new task`() = runBlocking {
             Mockito.`when`(mockRepo.deleteToDo(10)).thenReturn(Unit)
             val result = deleteTaskUseCase.deleteTasks(10L)
             result.collect {
                 assertTrue(it is TodoState.ConfirmationState)
             }
         }
-    }
 
     @Test
-    fun `error adding new task`() {
-        runBlocking {
+    fun `error adding new task`() = runBlocking {
             BDDMockito.given(mockRepo.deleteToDo(10)).willThrow(RuntimeException("test exception", ConnectException()))
             val result = deleteTaskUseCase.deleteTasks(10L)
             result.collect {
                 assertTrue(it is TodoState.ErrorState)
             }
         }
-    }
 
     @After
     fun after() {

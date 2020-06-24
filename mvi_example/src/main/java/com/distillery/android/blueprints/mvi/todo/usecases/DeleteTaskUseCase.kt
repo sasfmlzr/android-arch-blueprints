@@ -9,12 +9,12 @@ import org.koin.core.inject
 import java.net.ConnectException
 
 class DeleteTaskUseCase : KoinComponent {
-    val toDoRepo: ToDoRepository by inject()
+    val toDoRepository: ToDoRepository by inject()
 
     suspend fun deleteTasks(idUnique: Long): Flow<TodoState<Unit>> {
         return flow {
             try {
-                toDoRepo.deleteToDo(idUnique)
+                toDoRepository.deleteToDo(idUnique)
                 emit(TodoState.ConfirmationState(SUCCESS_DELETION))
             } catch (connectException: ConnectException) {
                 emit(TodoState.ErrorState(connectException))
