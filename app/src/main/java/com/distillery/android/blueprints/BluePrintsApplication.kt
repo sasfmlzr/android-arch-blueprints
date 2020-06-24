@@ -1,6 +1,7 @@
 package com.distillery.android.blueprints
 
 import android.app.Application
+import com.distillery.android.blueprints.mvi.mviModule
 import com.distillery.android.blueprints.mvvm.mvvmModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,8 @@ class BluePrintsApplication : Application() {
             androidContext(this@BluePrintsApplication)
             modules(listOf(
                     coroutineModule,
-                    mvvmModule
+                    mvvmModule,
+                    mviModule
             ))
         }
     }
