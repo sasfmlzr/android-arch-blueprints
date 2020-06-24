@@ -1,13 +1,10 @@
 package com.distillery.android.blueprints.mvi.todo.state
 
-import com.distillery.android.domain.models.ToDoModel
-import kotlinx.coroutines.flow.Flow
-
-sealed class ToDoState {
-    object LoadingState : ToDoState()
-    data class DataState(val todoListFlow: Flow<List<ToDoModel>>) : ToDoState()
-    data class ErrorState(val errorMsg: String) : ToDoState()
-    data class SaveToDoState(val todoTask: ToDoModel) : ToDoState()
-    data class DeleteState(val id: Long) : ToDoState()
-    data class ConfirmationState(val id: Long) : ToDoState()
+sealed class ToDoState<out T> {
+    object LoadingState : ToDoState<Nothing>()
+    data class DataState<out T> (val todoListFlow: T) : ToDoState<T>()
+    data class ErrorState (val errorMsg: Throwable?) : ToDoState<Nothing>()
+    data class SaveToDoState<out T>(val title: String, val description: String) : ToDoState<T>()
+    data class DeleteState(val id: Long) : ToDoState<Unit>()
+    data class ConfirmationState(val id: Int) : ToDoState<Unit>()
 }
