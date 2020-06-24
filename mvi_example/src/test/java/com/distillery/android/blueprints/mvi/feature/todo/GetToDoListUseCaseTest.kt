@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvi.feature.todo
 
-import com.distillery.android.blueprints.mvi.todo.state.ToDoState
+import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.blueprints.mvi.todo.usecases.GetToDoListUseCase
 import com.distillery.android.domain.ToDoRepository
 import com.distillery.android.domain.models.ToDoModel
@@ -46,12 +46,12 @@ class GetToDoListUseCaseTest : KoinTest {
             val mockedFlow = flow {
                 emit(listTasks)
             }
-            val dataSate = ToDoState.DataState(listTasks)
+            val dataSate = TodoState.DataState(listTasks)
             Mockito.`when`(mockRepo.fetchToDos()).thenReturn(mockedFlow)
             val result = getToDoListUseCase.getToDoList()
             result.collect {
                 Assert.assertEquals(dataSate, it)
-                Assert.assertEquals(dataSate.todoListFlow.first(), (it as ToDoState.DataState).todoListFlow.first())
+                Assert.assertEquals(dataSate.todoListFlow.first(), (it as TodoState.DataState).todoListFlow.first())
             }
         }
     }

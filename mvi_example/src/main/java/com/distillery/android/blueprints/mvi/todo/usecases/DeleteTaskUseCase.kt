@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvi.todo.usecases
 
-import com.distillery.android.blueprints.mvi.todo.state.ToDoState
+import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.domain.ToDoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,13 +11,13 @@ import java.net.ConnectException
 class DeleteTaskUseCase : KoinComponent {
     val toDoRepo: ToDoRepository by inject()
 
-    suspend fun deleteTasks(idUnique: Long): Flow<ToDoState<Unit>> {
+    suspend fun deleteTasks(idUnique: Long): Flow<TodoState<Unit>> {
         return flow {
             try {
                 toDoRepo.deleteToDo(idUnique)
-                emit(ToDoState.ConfirmationState(SUCCESS_DELETION))
+                emit(TodoState.ConfirmationState(SUCCESS_DELETION))
             } catch (connectException: ConnectException) {
-                emit(ToDoState.ErrorState(connectException))
+                emit(TodoState.ErrorState(connectException))
             }
         }
     }

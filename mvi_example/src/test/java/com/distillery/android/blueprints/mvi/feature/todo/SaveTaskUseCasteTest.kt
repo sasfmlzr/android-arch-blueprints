@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvi.feature.todo
 
-import com.distillery.android.blueprints.mvi.todo.state.ToDoState
+import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.blueprints.mvi.todo.usecases.SaveTaskUseCase
 import com.distillery.android.domain.ToDoRepository
 import kotlinx.coroutines.flow.collect
@@ -43,7 +43,7 @@ class SaveTaskUseCasteTest : KoinTest {
             `when`(mockRepo.addToDo("empty", "empty")).thenReturn(Unit)
             val result = saveTaskUseCase.saveTask("empty", "empty")
             result.collect {
-                assertTrue(it is ToDoState.ConfirmationState)
+                assertTrue(it is TodoState.ConfirmationState)
             }
         }
     }
@@ -54,7 +54,7 @@ class SaveTaskUseCasteTest : KoinTest {
             given(mockRepo.addToDo("empty", "string")).willThrow(RuntimeException("TestException"))
             val result = saveTaskUseCase.saveTask("empty", "string")
             result.collect {
-                assertTrue(it is ToDoState.ErrorState)
+                assertTrue(it is TodoState.ErrorState)
             }
         }
     }

@@ -1,13 +1,11 @@
 package com.distillery.android.blueprints.mvi.feature.todo
 
-import com.distillery.android.blueprints.mvi.todo.state.ToDoState
+import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.blueprints.mvi.todo.usecases.DeleteTaskUseCase
 import com.distillery.android.domain.ToDoRepository
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -47,7 +45,7 @@ class DeleteTaskUseCaseTest : KoinTest {
             Mockito.`when`(mockRepo.deleteToDo(10)).thenReturn(Unit)
             val result = deleteTaskUseCase.deleteTasks(10L)
             result.collect {
-                assertTrue(it is ToDoState.ConfirmationState)
+                assertTrue(it is TodoState.ConfirmationState)
             }
         }
     }
@@ -58,7 +56,7 @@ class DeleteTaskUseCaseTest : KoinTest {
             BDDMockito.given(mockRepo.deleteToDo(10)).willThrow(RuntimeException("test exception", ConnectException()))
             val result = deleteTaskUseCase.deleteTasks(10L)
             result.collect {
-                assertTrue(it is ToDoState.ErrorState)
+                assertTrue(it is TodoState.ErrorState)
             }
         }
     }

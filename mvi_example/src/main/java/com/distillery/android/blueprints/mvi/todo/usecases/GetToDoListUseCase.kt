@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvi.todo.usecases
 
-import com.distillery.android.blueprints.mvi.todo.state.ToDoState
+import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.domain.ToDoRepository
 import com.distillery.android.domain.models.ToDoModel
 import kotlinx.coroutines.flow.Flow
@@ -13,11 +13,11 @@ import org.koin.core.inject
 class GetToDoListUseCase : KoinComponent {
     private val toDoRepo: ToDoRepository by inject()
 
-    suspend fun getToDoList(): Flow<ToDoState<List<ToDoModel>>> {
+    suspend fun getToDoList(): Flow<TodoState<List<ToDoModel>>> {
         return flow {
             toDoRepo.fetchToDos().catch { e ->
-                emit(ToDoState.ErrorState(e.cause))
-            }.map { emit(ToDoState.DataState(it)) }
+                emit(TodoState.ErrorState(e.cause))
+            }.map { emit(TodoState.DataState(it)) }
         }
     }
 }
