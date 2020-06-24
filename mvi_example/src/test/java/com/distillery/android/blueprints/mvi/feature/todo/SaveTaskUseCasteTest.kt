@@ -6,6 +6,7 @@ import com.distillery.android.domain.ToDoRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -17,6 +18,7 @@ import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import java.net.ConnectException
 
 class SaveTaskUseCasteTest : KoinTest {
 
@@ -39,8 +41,8 @@ class SaveTaskUseCasteTest : KoinTest {
 
     @Test
     fun `add succesfully new task`() = runBlocking {
-        `when`(mockRepo.addToDo("empty", "empty")).thenReturn(Unit)
-        val result = saveTaskUseCase.saveTask("empty", "empty")
+        `when`(mockRepo.addToDo(STRING_STUB, STRING_STUB)).thenReturn(Unit)
+        val result = saveTaskUseCase.saveTask(STRING_STUB, STRING_STUB)
         result.collect {
             assertTrue(it is TodoState.ConfirmationState)
         }
@@ -48,15 +50,21 @@ class SaveTaskUseCasteTest : KoinTest {
 
     @Test
     fun `error adding new task`() = runBlocking {
-        given(mockRepo.addToDo("empty", "string")).willThrow(RuntimeException("TestException"))
-        val result = saveTaskUseCase.saveTask("empty", "string")
+        val exception = ConnectException("TestException")
+        given(mockRepo.addToDo(STRING_STUB, STRING_STUB)).willAnswer { throw exception }
+        val result = saveTaskUseCase.saveTask(STRING_STUB, STRING_STUB)
         result.collect {
             assertTrue(it is TodoState.ErrorState)
+            assertEquals(exception, (it as TodoState.ErrorState).errorMsg)
         }
     }
 
     @After
     fun after() {
         stopKoin()
+    }
+
+    companion object {
+        private const val STRING_STUB = "non empty string"
     }
 }
