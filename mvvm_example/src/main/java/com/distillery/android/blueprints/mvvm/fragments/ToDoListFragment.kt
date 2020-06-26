@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.blueprints.mvvm.viewmodels.TodoListViewModel
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.mvvm_example.R
 import com.distillery.android.ui.adapter.ToDoListAdapter
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -86,11 +87,10 @@ class ToDoListFragment : Fragment() {
      * navigates to add item fragment using fragment transaction
      */
     private fun navigateToAddItemFragment() {
-        // todo yet to implement ... on following PRs
-        //        parentFragmentManager.beginTransaction()
-        //                .addToBackStack(null)
-        //                .replace(R.id.container, AddTodoFragment.newInstance())
-        //                .commit()
+        parentFragmentManager.beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.container, AddTodoItemFragment.newInstance())
+                .commit()
     }
 
     companion object {
