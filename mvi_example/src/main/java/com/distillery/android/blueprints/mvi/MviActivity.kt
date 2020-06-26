@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.distillery.android.blueprints.mvi.todo.TodoIntent
-import com.distillery.android.blueprints.mvi.todo.repo.model.TodoModel
+import com.distillery.android.blueprints.mvi.todo.TodoListModel
+import com.distillery.android.blueprints.mvi.todo.state.ConfirmationCode
 import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.blueprints.mvi.todo.viewmodel.TodoViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,19 +42,33 @@ class MviActivity : AppCompatActivity() {
                 }
     }
 
-    private fun handleState(state: TodoState<List<TodoModel>>) {
+    private fun handleState(state: TodoState<TodoListModel>) {
         when (state) {
             is TodoState.LoadingState -> {
+                // show loader
             }
             is TodoState.DataState -> {
+                // hide loader
+                state.todoListFlow.completedTodoList // set to pending RecyclerView Adapter
+                state.todoListFlow.todoList // set to completed RecyclerView Adapter
             }
             is TodoState.ErrorState -> {
-            }
-            is TodoState.SaveTodoState -> {
-            }
-            is TodoState.DeleteState -> {
+                // hide loader
+                // show Error snackbar
             }
             is TodoState.ConfirmationState -> {
+                // hide loader
+                when (state.confirmationCode) {
+                    is ConfirmationCode.SAVED -> {
+                        // show snackbar
+                    }
+                    is ConfirmationCode.DELETED -> {
+                        // show snackbar
+                    }
+                    is ConfirmationCode.UPDATED -> {
+                        // show snackbar
+                    }
+                }
             }
         }
     }
