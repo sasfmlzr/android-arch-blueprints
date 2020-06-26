@@ -11,7 +11,7 @@ import com.distillery.android.ui.strikeThrough
 
 class ToDoListAdapter(
     private val onDeleteClickListener: (toDoModel: ToDoModel) -> Unit,
-    private val onCompleteClickListener: (toDoModel: ToDoModel) -> Boolean
+    private val onCompleteClickListener: (toDoModel: ToDoModel) -> Unit
 ) : ListAdapter<ToDoModel, ToDoViewHolder>(ToDoListDiffCallback()) {
 
     inner class ToDoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {

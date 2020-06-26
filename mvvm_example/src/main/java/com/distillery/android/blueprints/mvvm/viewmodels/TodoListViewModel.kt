@@ -1,4 +1,4 @@
-package com.distillery.android.blueprints.mvvm
+package com.distillery.android.blueprints.mvvm.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -9,35 +9,35 @@ import com.distillery.android.domain.ToDoRepository
 import com.distillery.android.domain.models.ToDoModel
 import kotlinx.coroutines.launch
 
-class TodoViewModel(
+class TodoListViewModel(
     private val toDoRepository: ToDoRepository
 ) : ViewModel() {
 
     // collects the flow and convert it to livedata with view model scope
-    private val allTodoListLD: LiveData<List<ToDoModel>> =
+    private val allTodoListLiveData: LiveData<List<ToDoModel>> =
             toDoRepository.fetchToDos()
                     .asLiveData(viewModelScope.coroutineContext)
 
-    val todoListLD = allTodoListLD.map {
+    val todoListLiveData = allTodoListLiveData.map {
         it.filter { item -> item.completedAt == null } // non-completedTodo list
     }
 
-    val completedTodoListLD = allTodoListLD.map {
+    val completedTodoListLiveData = allTodoListLiveData.map {
         it.filter { item -> item.completedAt != null } // completedTodo list
     }
 
     /**
      * calls the repo to make the item completed
      */
-    fun completeTodo(id: Long) {
-        toDoRepository.completeToDo(id)
+    fun completeTodo(toDoModel: ToDoModel) {
+        toDoRepository.completeToDo(toDoModel.uniqueId)
     }
 
     /**
      * launch coroutine and calls the repo to make the item deleted
      */
-    fun deleteTodo(id: Long) {
-        viewModelScope.launch { toDoRepository.deleteToDo(id) }
+    fun deleteTodo(toDoModel: ToDoModel) {
+        viewModelScope.launch { toDoRepository.deleteToDo(toDoModel.uniqueId) }
     }
 
     /**
