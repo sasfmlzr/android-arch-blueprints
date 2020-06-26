@@ -1,3 +1,5 @@
+package com.distillery.android.blueprints.mvi
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 

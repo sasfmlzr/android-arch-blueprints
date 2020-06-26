@@ -1,8 +1,8 @@
 package com.distillery.android.blueprints.mvi.todo.viewmodel
 
-import MviViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.distillery.android.blueprints.mvi.MviViewModel
 import com.distillery.android.blueprints.mvi.todo.TodoIntent
 import com.distillery.android.blueprints.mvi.todo.repo.model.TodoModel
 import com.distillery.android.blueprints.mvi.todo.state.TodoState

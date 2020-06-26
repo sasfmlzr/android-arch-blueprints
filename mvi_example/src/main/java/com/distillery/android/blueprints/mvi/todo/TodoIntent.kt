@@ -1,6 +1,6 @@
 package com.distillery.android.blueprints.mvi.todo
 
-import MviIntent
+import com.distillery.android.blueprints.mvi.MviIntent
 
 sealed class TodoIntent : MviIntent {
     object PopulateTodoList : TodoIntent()
