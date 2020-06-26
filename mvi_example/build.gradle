@@ -18,6 +18,7 @@ dependencies {
 
     implementation project(path: ':domain')
     implementation project(path: ':mvi')
+    implementation project(path: ':ui')
 
     // Platform libraries
     implementation libraries.platform.kotlinStdLib
