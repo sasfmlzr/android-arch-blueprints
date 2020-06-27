@@ -1,6 +1,7 @@
 package com.distillery.android.blueprints.mvi.todo.usecases
 
 import com.distillery.android.blueprints.mvi.todo.TodoListModel
+import com.distillery.android.blueprints.mvi.todo.fetchUpdate
 import com.distillery.android.blueprints.mvi.todo.state.ConfirmationCode
 import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.domain.ToDoRepository
@@ -16,10 +17,15 @@ class DeleteTaskUseCase : KoinComponent {
     suspend fun deleteTasks(idUnique: Long): Flow<TodoState<TodoListModel>> {
         return flow {
             try {
-                toDoRepository.deleteToDo(idUnique)
+                toDoRepository.apply {
+                    deleteToDo(idUnique)
+                    emit(TodoState.DataState(fetchUpdate()))
+                }
                 emit(TodoState.ConfirmationState(ConfirmationCode.DELETED))
             } catch (connectException: ConnectException) {
                 emit(TodoState.ErrorState(connectException))
+            } catch (noSuchElement: NoSuchElementException) {
+                emit(TodoState.ErrorState(noSuchElement))
             }
         }
     }
