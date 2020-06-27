@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.distillery.android.blueprints.mvi.MviViewModel
 import com.distillery.android.blueprints.mvi.todo.TodoIntent
-import com.distillery.android.blueprints.mvi.todo.repo.model.TodoModel
+import com.distillery.android.blueprints.mvi.todo.TodoListModel
 import com.distillery.android.blueprints.mvi.todo.state.TodoState
 import com.distillery.android.blueprints.mvi.todo.usecases.DeleteTaskUseCase
 import com.distillery.android.blueprints.mvi.todo.usecases.GetToDoListUseCase
@@ -25,8 +25,8 @@ class TodoViewModel : ViewModel(), MviViewModel<TodoIntent>, KoinComponent {
     private val deleteTaskUseCase: DeleteTaskUseCase by inject()
     private val saveTaskUseCase: SaveTaskUseCase by inject()
 
-    private val mutableState = MutableStateFlow<TodoState<List<TodoModel>>>(TodoState.LoadingState)
-    val todoState: StateFlow<TodoState<List<TodoModel>>>
+    private val mutableState = MutableStateFlow<TodoState<TodoListModel>>(TodoState.LoadingState)
+    val todoState: StateFlow<TodoState<TodoListModel>>
         get() = mutableState
 
     override fun proccessIntents(intents: Flow<TodoIntent>) {
@@ -54,7 +54,7 @@ class TodoViewModel : ViewModel(), MviViewModel<TodoIntent>, KoinComponent {
                     .collect { state ->
                         when (state) {
                             is TodoState.DataState -> {
-                                mutableState.value = state as TodoState<List<TodoModel>>
+                                mutableState.value = state
                             }
                             is TodoState.ErrorState -> {
                                 mutableState.value = state
@@ -66,9 +66,13 @@ class TodoViewModel : ViewModel(), MviViewModel<TodoIntent>, KoinComponent {
 
     private fun deleteTodo(id: Long) {
         viewModelScope.launch {
+            mutableState.value = TodoState.LoadingState
             deleteTaskUseCase.deleteTasks(id)
                     .collect { state ->
                         when (state) {
+                            is TodoState.DataState -> {
+                                mutableState.value = state
+                            }
                             is TodoState.ConfirmationState -> {
                                 mutableState.value = state
                             }
@@ -85,6 +89,9 @@ class TodoViewModel : ViewModel(), MviViewModel<TodoIntent>, KoinComponent {
             saveTaskUseCase.saveTask(title, description)
                     .collect { state ->
                         when (state) {
+                            is TodoState.DataState -> {
+                                mutableState.value = state
+                            }
                             is TodoState.ConfirmationState -> {
                                 mutableState.value = state
                             }
