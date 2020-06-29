@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.domain.models.isCompleted
 import com.distillery.android.ui.adapter.ToDoListAdapter.ToDoViewHolder
 import com.distillery.android.ui.databinding.ItemTodoBinding
 import com.distillery.android.ui.strikeThrough
@@ -22,7 +23,7 @@ class ToDoListAdapter(
                 deleteButton.setOnClickListener {
                     onDeleteClickListener(toDoModel)
                 }
-                completedCheckBox.isChecked = toDoModel.completedAt != null
+                completedCheckBox.isChecked = toDoModel.isCompleted
                 completedCheckBox.setOnClickListener {
                     if (completedCheckBox.isChecked) {
                         completedCheckBox.isChecked = false
@@ -31,7 +32,7 @@ class ToDoListAdapter(
                         completedCheckBox.isChecked = true
                     }
                 }
-                if (toDoModel.completedAt != null) {
+                if (toDoModel.isCompleted) {
                     titleTextView.strikeThrough()
                     descriptionTextView.strikeThrough()
                 }

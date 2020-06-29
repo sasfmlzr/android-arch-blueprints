@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.distillery.android.blueprints.mvp.R
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.domain.models.isCompleted
 import com.distillery.android.ui.adapter.ToDoListAdapter
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 import com.google.android.material.snackbar.Snackbar
@@ -60,8 +61,8 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
             completedToDoAdapter = createToDoAdapter()
             binding.completedTodoList.adapter = completedToDoAdapter
         }
-        uncompletedToDoAdapter.submitList(toDoModel.toDoList.filter { it.completedAt == null })
-        completedToDoAdapter.submitList(toDoModel.toDoList.filter { it.completedAt != null })
+        uncompletedToDoAdapter.submitList(toDoModel.toDoList.filter { !it.isCompleted })
+        completedToDoAdapter.submitList(toDoModel.toDoList.filter { it.isCompleted })
     }
 
     private fun createToDoAdapter() =
