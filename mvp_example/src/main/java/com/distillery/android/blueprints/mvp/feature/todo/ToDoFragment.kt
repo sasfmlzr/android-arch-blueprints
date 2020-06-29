@@ -23,12 +23,12 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
 
     private lateinit var uncompletedToDoAdapter: ToDoListAdapter
     private lateinit var completedToDoAdapter: ToDoListAdapter
-    private var toDoModel: com.distillery.android.blueprints.mvp.feature.todo.ToDoModel = ToDoModel(listOf())
+    private var toDoFragmentModel: ToDoFragmentModel = ToDoFragmentModel(listOf())
 
     override val presenterView: ToDoView by lazy {
         object : ToDoView(binding) {
             override fun showToDoList(list: List<ToDoModel>) {
-                toDoModel = ToDoModel(list)
+                toDoFragmentModel = ToDoFragmentModel(list)
                 updateAdapter()
             }
         }
@@ -46,7 +46,7 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
         if (savedInstanceState == null) {
             presenter.fetchToDo()
         } else {
-            toDoModel = savedInstanceState.getParcelable(TODO_MODEL_BUNDLE_KEY)!!
+            toDoFragmentModel = savedInstanceState.getParcelable(TODO_MODEL_BUNDLE_KEY)!!
             updateAdapter()
         }
         return binding.root
@@ -61,8 +61,8 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
             completedToDoAdapter = createToDoAdapter()
             binding.completedTodoList.adapter = completedToDoAdapter
         }
-        uncompletedToDoAdapter.submitList(toDoModel.toDoList.filter { !it.isCompleted })
-        completedToDoAdapter.submitList(toDoModel.toDoList.filter { it.isCompleted })
+        uncompletedToDoAdapter.submitList(toDoFragmentModel.toDoList.filter { !it.isCompleted })
+        completedToDoAdapter.submitList(toDoFragmentModel.toDoList.filter { it.isCompleted })
     }
 
     private fun createToDoAdapter() =
@@ -80,7 +80,7 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(TODO_MODEL_BUNDLE_KEY, toDoModel)
+        outState.putParcelable(TODO_MODEL_BUNDLE_KEY, toDoFragmentModel)
         super.onSaveInstanceState(outState)
     }
 }
