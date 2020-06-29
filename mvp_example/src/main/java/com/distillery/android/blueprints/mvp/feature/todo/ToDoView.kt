@@ -6,10 +6,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.distillery.android.blueprints.mvp.R
 import com.distillery.android.blueprints.mvp.architecture.BaseView
+import com.distillery.android.blueprints.mvp.architecture.WithErrorDisplayer
+import com.distillery.android.blueprints.mvp.architecture.WithLoading
 import com.distillery.android.domain.models.ToDoModel
 import com.distillery.android.ui.databinding.FragmentTodoBinding
 
-abstract class ToDoView(private val binding: FragmentTodoBinding) : BaseView {
+abstract class ToDoView(private val binding: FragmentTodoBinding) : BaseView, WithLoading, WithErrorDisplayer {
 
     override fun startLoading() {
         binding.progressBar.visibility = View.VISIBLE
