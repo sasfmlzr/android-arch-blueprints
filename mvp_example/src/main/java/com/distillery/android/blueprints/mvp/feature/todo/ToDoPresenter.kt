@@ -53,10 +53,10 @@ class ToDoPresenter(override var view: ToDoView) : BasePresenter<ToDoView>(view)
 
     fun onChangeView(view: ToDoView) {
         this.view = view
-        onSetClickListenerForAddButton()
+        setClickListenerForAddButton()
     }
 
-    private fun onSetClickListenerForAddButton() {
+    private fun setClickListenerForAddButton() {
         view.setClickListenerForAddButton { addToDo() }
     }
 
