@@ -4,13 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.distillery.android.blueprints.mvp.R
 import com.distillery.android.blueprints.mvp.architecture.BaseFragment
 import com.distillery.android.domain.models.ToDoModel
-import com.distillery.android.domain.models.isCompleted
-import com.distillery.android.ui.adapter.ToDoListAdapter
 import com.distillery.android.ui.databinding.FragmentTodoBinding
-import com.google.android.material.snackbar.Snackbar
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
@@ -21,66 +17,32 @@ class ToDoFragment : BaseFragment<FragmentTodoBinding, ToDoView>() {
         fun newInstance() = ToDoFragment()
     }
 
-    private lateinit var uncompletedToDoAdapter: ToDoListAdapter
-    private lateinit var completedToDoAdapter: ToDoListAdapter
-    private var toDoPresentationModel: ToDoPresentationModel = ToDoPresentationModel(listOf())
-
     override val presenterView: ToDoView by lazy {
         object : ToDoView(binding) {
             override fun showToDoList(list: List<ToDoModel>) {
-                toDoPresentationModel = ToDoPresentationModel(list)
-                updateAdapter()
+                presenter.toDoPresentationModel = ToDoPresentationModel(list)
+                presenter.onUpdateAdapters()
             }
         }
     }
 
     override val presenter: ToDoPresenter by inject { parametersOf(presenterView) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentTodoBinding.inflate(inflater, container, false)
-        binding.buttonAdd.setOnClickListener {
-            presenter.addToDo()
-        }
-        presenter.changeView(presenterView)
+        presenter.onChangeView(presenterView)
         if (savedInstanceState == null) {
-            presenter.fetchToDo()
+            presenter.onFetchToDo()
         } else {
-            toDoPresentationModel = savedInstanceState.getParcelable(TODO_MODEL_BUNDLE_KEY)!!
-            updateAdapter()
+            presenter.toDoPresentationModel = savedInstanceState.getParcelable(TODO_MODEL_BUNDLE_KEY)!!
+            presenter.onUpdateAdapters()
         }
         return binding.root
     }
 
-    private fun updateAdapter() {
-        if (binding.todoList.adapter == null) {
-            uncompletedToDoAdapter = createToDoAdapter()
-            binding.todoList.adapter = uncompletedToDoAdapter
-        }
-        if (binding.completedTodoList.adapter == null) {
-            completedToDoAdapter = createToDoAdapter()
-            binding.completedTodoList.adapter = completedToDoAdapter
-        }
-        uncompletedToDoAdapter.submitList(toDoPresentationModel.toDoList.filter { !it.isCompleted })
-        completedToDoAdapter.submitList(toDoPresentationModel.toDoList.filter { it.isCompleted })
-    }
-
-    private fun createToDoAdapter() =
-            ToDoListAdapter({ todo ->
-                presenter.deleteToDo(todo.uniqueId)
-                showDeleteSnackbar()
-            }, { todo ->
-                presenter.completeToDo(todo)
-            })
-
-    private fun showDeleteSnackbar() {
-        val snackbar = Snackbar.make(binding.root, getString(R.string.snackbar_delete_message), Snackbar.LENGTH_LONG)
-        snackbar.setAction(getString(R.string.ok)) {}
-        snackbar.show()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(TODO_MODEL_BUNDLE_KEY, toDoPresentationModel)
+        outState.putParcelable(TODO_MODEL_BUNDLE_KEY, presenter.toDoPresentationModel)
         super.onSaveInstanceState(outState)
     }
 }

@@ -3,6 +3,8 @@ package com.distillery.android.blueprints.mvp.feature.todo
 import com.distillery.android.blueprints.mvp.architecture.BasePresenter
 import com.distillery.android.domain.ToDoRepository
 import com.distillery.android.domain.models.ToDoModel
+import com.distillery.android.domain.models.isCompleted
+import com.distillery.android.ui.adapter.ToDoListAdapter
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,33 +28,39 @@ class ToDoPresenter(override var view: ToDoView) : BasePresenter<ToDoView>(view)
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO + coroutineExceptionHandler
 
     private val todoRepo: ToDoRepository by inject { parametersOf(this) }
+    var toDoPresentationModel: ToDoPresentationModel = ToDoPresentationModel(listOf())
 
-    private fun finishLoading() {
-        view.endLoading()
-    }
-
-    fun changeView(view: ToDoView) {
-        this.view = view
-    }
-
-    fun fetchToDo() {
+    fun onFetchToDo() {
         launch {
             view.startLoading()
             todoRepo.fetchToDos().catch {
-                        withContext(Dispatchers.Main) {
-                            view.showError(it.toString())
-                        }
-                    }
+                withContext(Dispatchers.Main) {
+                    view.showError(it.toString())
+                }
+            }
                     .collect {
                         withContext(Dispatchers.Main) {
                             view.showToDoList(it)
-                            finishLoading()
+                            onFinishLoading()
                         }
                     }
         }
     }
 
-    fun addToDo() {
+    private fun onFinishLoading() {
+        view.endLoading()
+    }
+
+    fun onChangeView(view: ToDoView) {
+        this.view = view
+        onSetClickListenerForAddButton()
+    }
+
+    private fun onSetClickListenerForAddButton() {
+        view.setClickListenerForAddButton { addToDo() }
+    }
+
+    private fun addToDo() {
         view.addToDo { title, description ->
             launch {
                 todoRepo.addToDo(title, description)
@@ -60,13 +68,33 @@ class ToDoPresenter(override var view: ToDoView) : BasePresenter<ToDoView>(view)
         }
     }
 
-    fun deleteToDo(uniqueId: Long) {
+    fun onUpdateAdapters() {
+        if (!view.isUncompletedAdapterExists()) {
+            view.createUncompletedAdapter(createToDoAdapter())
+        }
+        if (!view.isCompletedAdapterExists()) {
+            view.createCompletedAdapter(createToDoAdapter())
+        }
+        view.updateUncompletedList(toDoPresentationModel.toDoList.filter { !it.isCompleted })
+        view.updateCompletedList(toDoPresentationModel.toDoList.filter { it.isCompleted })
+    }
+
+    private fun createToDoAdapter(): ToDoListAdapter {
+        return view.createToDoAdapter({
+            deleteToDo(it.uniqueId)
+            view.showDeleteSnackbar()
+        }, {
+            completeToDo(it)
+        })
+    }
+
+    private fun deleteToDo(uniqueId: Long) {
         launch {
             todoRepo.deleteToDo(uniqueId)
         }
     }
 
-    fun completeToDo(toDoModel: ToDoModel) {
+    private fun completeToDo(toDoModel: ToDoModel) {
         try {
             todoRepo.completeToDo(toDoModel.uniqueId)
         } catch (e: UnsupportedOperationException) {
@@ -77,7 +105,7 @@ class ToDoPresenter(override var view: ToDoView) : BasePresenter<ToDoView>(view)
     /**
      * Use it for cancellation ToDoRepository tasks when you route to another fragment.
      */
-    fun cleanup() {
+    fun onCleanup() {
         job.cancel()
     }
 }
