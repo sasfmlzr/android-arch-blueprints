@@ -23,5 +23,5 @@ task checkstyle(type: Checkstyle) {
     // empty classpath
     classpath = files()
 
-    maxWarnings = 0
+    maxWarnings = 10
 }
