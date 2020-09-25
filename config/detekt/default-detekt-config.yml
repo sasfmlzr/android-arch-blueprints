@@ -2,7 +2,7 @@
 # for default config
 
 build:
-  maxIssues: 0
+  maxIssues: 10
   weights:
     # complexity: 0
     # LongParameterList: 0
