@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.distillery.android.domain" />
+<manifest package="com.distillery.android.domain" />
